@@ -105,3 +105,16 @@ INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (1, 2),
 INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (2, 3),
 INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (3, 4),
 INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (4, 5);
+
+INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES (1, 1, 2, '2026-10-01'),
+INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES (1, 3, 1, '2026-10-01'),
+INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES (2, 2, 1, '2026-10-05'),
+INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES (3, 4, 3, '2026-10-10'),
+INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES (4, 5, 1, '2026-10-15'),
+INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES (5, 1, 1, '2026-10-16');
+
+INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (1, 1, '2026-10-02'),
+INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (1, 2, '2026-10-12'),
+INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (2, 3, '2026-10-05'),
+INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (3, 4, '2026-10-10'),
+INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (4, 5, '2026-10-15');
