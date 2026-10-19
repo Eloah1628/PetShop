@@ -31,3 +31,36 @@ CREATE TABLE Veterinarios (
     data_nasc DATE NOT NULL,
     especializacao VARCHAR(140)
 );
+
+CREATE TABLE Cliente_Pet (
+    id_usuario INT NOT NULL,
+    id_pet INT NOT NULL,
+
+    PRIMARY KEY (id_usuario, id_pet)
+);
+
+CREATE TABLE Cliente_Produto (
+    id_usuario INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 1 CHECK (quantidade > 0),
+    data_compra DATE NOT NULL,
+
+    PRIMARY KEY (id_usuario, id_produto, data_compra)
+);
+
+CREATE TABLE Cliente_Veterinario (
+    id_usuario INT NOT NULL,
+    id_veterinario INT NOT NULL,
+    data_consulta DATE NOT NULL,
+
+    PRIMARY KEY (id_usuario, id_veterinario, data_consulta)
+);
+
+CREATE TABLE Pet_Veterinario (
+    id_pet INT NOT NULL,
+    id_veterinario INT NOT NULL,
+    data_atendimento DATE NOT NULL,
+    observacoes VARCHAR(200),
+
+    PRIMARY KEY (id_pet, id_veterinario, data_atendimento)
+);
