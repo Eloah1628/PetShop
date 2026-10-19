@@ -1,56 +1,33 @@
-/*
-Perfil individual de cada pet
-Produtos
-Veterinário
-Perfil de usuário
-*/
+CREATE DATABASE IF "PetShopLuzzie" NOT EXISTS;
+USE PetShopLuzzie;
 
-CREATE DATABASE IF NOT EXISTS PetShopLuzzie;
-USE DATABASE;
+CREATE TABLE Usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL,
+    cpf CHAR(14) NOT NULL UNIQUE
+);
 
-CREATE TABLE Pets(
-    id serial primary key
-    -- foto
-    nome varchar(80),
-    idade int,
-    sexo char(1) check("F", "f", "M", "m") not null,
-    descricao varchar(140) not null,
-    historico_vet varchar(200),
-    estado_atual varchar(200)
-)
+CREATE TABLE Pets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL,
+    idade INT CHECK (idade IS NULL OR idade >= 0),
+    sexo CHAR(1) NOT NULL CHECK (sexo IN ('F', 'f', 'M', 'm')),
+    descricao VARCHAR(140) NOT NULL,
+    historico_vet VARCHAR(200),
+    estado_atual VARCHAR(200)
+);
 
-CREATE TABLE Usuarios(
-    id serial primary key
-    -- foto
-    nome varchar(80) not null,
-    cpf char(14) not null
-)
+CREATE TABLE Produtos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(40) NOT NULL,
+    preco DECIMAL(10,2) NOT NULL CHECK (preco >= 0),
+    descricao VARCHAR(60) NOT NULL,
+    quant_estoque INT NOT NULL CHECK (quant_estoque >= 0)
+);
 
-CREATE TABLE Produtos(
-    id serial primary key
-    -- foto
-    nome varchar(40) not null,
-    preco float not null,
-    descricao varchar(60) not null,
-    quant_estoque int not null
-)
-
-CREATE TABLE Veterinarios(
-    id serial primary Key
-    --foto
-    nome varchar(80) not null,
-    data_nasc date not null,
-    especializacao varchar(140)
-)
-
---Foreign Key's
-    /*
-    *cliente_produto
-    *cliente_pet
-    *cliente_veterinario
-    *pet_veterinario
-    */
-
-
-
---Join's
+CREATE TABLE Veterinarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL,
+    data_nasc DATE NOT NULL,
+    especializacao VARCHAR(140)
+);
