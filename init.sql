@@ -36,7 +36,10 @@ CREATE TABLE Cliente_Pet (
     id_usuario INT NOT NULL,
     id_pet INT NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_pet)
+    PRIMARY KEY (id_usuario, id_pet),
+
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_pet) REFERENCES Pets(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Cliente_Produto (
@@ -45,7 +48,10 @@ CREATE TABLE Cliente_Produto (
     quantidade INT NOT NULL DEFAULT 1 CHECK (quantidade > 0),
     data_compra DATE NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_produto, data_compra)
+    PRIMARY KEY (id_usuario, id_produto, data_compra),
+
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_produto) REFERENCES Produtos(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Cliente_Veterinario (
@@ -53,7 +59,10 @@ CREATE TABLE Cliente_Veterinario (
     id_veterinario INT NOT NULL,
     data_consulta DATE NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_veterinario, data_consulta)
+    PRIMARY KEY (id_usuario, id_veterinario, data_consulta),
+
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_veterinario) REFERENCES Veterinarios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Pet_Veterinario (
@@ -62,5 +71,8 @@ CREATE TABLE Pet_Veterinario (
     data_atendimento DATE NOT NULL,
     observacoes VARCHAR(200),
 
-    PRIMARY KEY (id_pet, id_veterinario, data_atendimento)
+    PRIMARY KEY (id_pet, id_veterinario, data_atendimento),
+
+    FOREIGN KEY (id_pet) REFERENCES Pets(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_veterinario) REFERENCES Veterinarios(id) ON DELETE CASCADE
 );
