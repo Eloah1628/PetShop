@@ -84,20 +84,20 @@ INSERT INTO Usuarios (nome, cpf) VALUES ('Daniel Costa', '456.789.012-34');
 INSERT INTO Usuarios (nome, cpf) VALUES ('Mariana Souza', '567.890.123-45');
 
 
-INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Rex', 5, 'M', 'Cachorro da raça Labrador', 'Vacinado e castrado', 'Saudável');
-INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Luna', 3, 'F', 'Gata da raça Siamês', 'Tratamento contra pulgas', 'Saudável');
-INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Bob', 7, 'M', 'Cachorro da raça Poodle', 'Acompanhamento odontológico', 'Em observação');
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Rex', 5, 'M', 'Cachorro da raca Labrador', 'Vacinado e castrado', 'Saudavel');
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Luna', 3, 'F', 'Gata da raca Siames', 'Tratamento contra pulgas', 'Saudavel');
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Bob', 7, 'M', 'Cachorro da raca Poodle', 'Acompanhamento odontologico', 'Em observacao');
 
-INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Ração para cães', 89.90, 'Ração premium para cães adultos', 30);
-INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Ração para gatos', 74.50, 'Ração para gatos adultos', 25);
-INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Coleira azul', 19.90, 'Coleira ajustável para cães', 40);
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Racao para caes', 89.90, 'Racao premium para caes adultos', 30);
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Racao para gatos', 74.50, 'Racao para gatos adultos', 25);
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Coleira azul', 19.90, 'Coleira ajustavel para caes', 40);
 INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Brinquedo mordedor', 14.99, 'Mordedor de borracha', 50);
-INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Shampoo pet', 27.50, 'Shampoo para cães e gatos', 20);
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Shampoo pet', 27.50, 'Shampoo para caes e gatos', 20);
 
-INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Pedro Almeida', '1985-04-12', 'Clínica geral');
-INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Julia Martins', '1990-08-25', 'Dermatologia veterinária');
-INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Marcos Lima', '1982-11-03', 'Cirurgia veterinária');
-INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Fernanda Rocha', '1988-02-17', 'Odontologia veterinária');
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Pedro Almeida', '1985-04-12', 'Clinica geral');
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Julia Martins', '1990-08-25', 'Dermatologia veterinaria');
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Marcos Lima', '1982-11-03', 'Cirurgia veterinaria');
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Fernanda Rocha', '1988-02-17', 'Odontologia veterinaria');
 INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Lucas Ferreira', '1993-06-09', 'Medicina felina');
 
 INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (1, 1)
@@ -120,7 +120,7 @@ INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALU
 INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (4, 5, '2026-10-15');
 
 INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (1, 1, '2026-10-02', 'Consulta de rotina');
-INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (2, 2, '2026-10-12', 'Avaliação dermatológica');
-INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (3, 3, '2026-10-05', 'Avaliação clínica');
-INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (4, 4, '2026-10-10', 'Limpeza dentária');
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (2, 2, '2026-10-12', 'Avaliacao dermatologica');
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (3, 3, '2026-10-05', 'Avaliacao clinica');
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (4, 4, '2026-10-10', 'Limpeza dentaria');
 INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (5, 5, '2026-10-15', 'Consulta de filhote');

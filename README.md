@@ -5,6 +5,8 @@ Um site onde você pode marcar consultas veterinárias, comprar produtos ou aces
 
 Vá para o docker e digite no terminal:
 
-´´´
+```
 docker compose up --build -d
-´´´
+```
+
+##
