@@ -118,3 +118,9 @@ INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALU
 INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (2, 3, '2026-10-05'),
 INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (3, 4, '2026-10-10'),
 INSERT INTO Cliente_Veterinario (id_usuario, id_veterinario, data_consulta) VALUES (4, 5, '2026-10-15');
+
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (1, 1, '2026-10-02', 'Consulta de rotina'),
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (2, 2, '2026-10-12', 'Avaliação dermatológica'),
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (3, 3, '2026-10-05', 'Avaliação clínica'),
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (4, 4, '2026-10-10', 'Limpeza dentária'),
+INSERT INTO Pet_Veterinario (id_pet, id_veterinario, data_atendimento, observacoes) VALUES (5, 5, '2026-10-15', 'Consulta de filhote');
