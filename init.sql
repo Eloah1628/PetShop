@@ -76,3 +76,9 @@ CREATE TABLE Pet_Veterinario (
     FOREIGN KEY (id_pet) REFERENCES Pets(id) ON DELETE CASCADE,
     FOREIGN KEY (id_veterinario) REFERENCES Veterinarios(id) ON DELETE CASCADE
 );
+
+INSERT INTO Usuarios (nome, cpf) VALUES ('Ana Silva', '123.456.789-01'),
+INSERT INTO Usuarios (nome, cpf) VALUES ('Bruno Santos', '234.567.890-12'),
+INSERT INTO Usuarios (nome, cpf) VALUES ('Carla Oliveira', '345.678.901-23'),
+INSERT INTO Usuarios (nome, cpf) VALUES ('Daniel Costa', '456.789.012-34'),
+INSERT INTO Usuarios (nome, cpf) VALUES ('Mariana Souza', '567.890.123-45');
