@@ -99,3 +99,9 @@ INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Julia M
 INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Marcos Lima', '1982-11-03', 'Cirurgia veterinária'),
 INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Fernanda Rocha', '1988-02-17', 'Odontologia veterinária'),
 INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Lucas Ferreira', '1993-06-09', 'Medicina felina');
+
+INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (1, 1)
+INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (1, 2),
+INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (2, 3),
+INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (3, 4),
+INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES (4, 5);
