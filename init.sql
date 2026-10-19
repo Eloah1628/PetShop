@@ -82,3 +82,20 @@ INSERT INTO Usuarios (nome, cpf) VALUES ('Bruno Santos', '234.567.890-12'),
 INSERT INTO Usuarios (nome, cpf) VALUES ('Carla Oliveira', '345.678.901-23'),
 INSERT INTO Usuarios (nome, cpf) VALUES ('Daniel Costa', '456.789.012-34'),
 INSERT INTO Usuarios (nome, cpf) VALUES ('Mariana Souza', '567.890.123-45');
+
+
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Rex', 5, 'M', 'Cachorro da raça Labrador', 'Vacinado e castrado', 'Saudável'),
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Luna', 3, 'F', 'Gata da raça Siamês', 'Tratamento contra pulgas', 'Saudável'),
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Bob', 7, 'M', 'Cachorro da raça Poodle', 'Acompanhamento odontológico', 'Em observação')
+
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Ração para cães', 89.90, 'Ração premium para cães adultos', 30),
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Ração para gatos', 74.50, 'Ração para gatos adultos', 25),
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Coleira azul', 19.90, 'Coleira ajustável para cães', 40),
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Brinquedo mordedor', 14.99, 'Mordedor de borracha', 50),
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES ('Shampoo pet', 27.50, 'Shampoo para cães e gatos', 20);
+
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Pedro Almeida', '1985-04-12', 'Clínica geral'),
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Julia Martins', '1990-08-25', 'Dermatologia veterinária'),
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Marcos Lima', '1982-11-03', 'Cirurgia veterinária'),
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dra. Fernanda Rocha', '1988-02-17', 'Odontologia veterinária'),
+INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES ('Dr. Lucas Ferreira', '1993-06-09', 'Medicina felina');
