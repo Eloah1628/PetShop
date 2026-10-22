@@ -1,4 +1,4 @@
-const validarId = (req, res, next) => {
+const IdChecagem = (req, res, next) => {
     const {id} = req.params;
 
     if (!id || isNaN(Number(id))) {
@@ -10,22 +10,4 @@ const validarId = (req, res, next) => {
     next();
 };
 
-const ChecagemGenero = (tabela, parametros = []) => {
-    return (req, res, next) => {
-        const genero = req.body.genero;
-        if (!genero) {
-            return res.status(400).json({erro: "Gênero não informado."});
-        }
-        const parametroValido = parametros.length > 0;
-
-        if (!parametroValido) {
-            return res.status(400).json({erro: "Nenhum parâmetro informado.", tabela, genero});
-        }
-        next();
-    };
-};
-
-module.exports = {
-validarId,
-validarGenero
-};
+module.exports = validarId
