@@ -132,120 +132,49 @@ router.delete("veterinario/:id", IdChecagem("Veterinarios"), async (req, res, ne
 
 
 
-/*cliente /pet*/
+app.post("/Cliente_Pet", async (req, res) => {
 
-
-router.post("/cliente-pet", async (req, res, next) => {
+  const { id_usuario, id_pet } = req.body;
 
   try {
 
-    const { id_usuario, id_pet } = req.body;
-
-    if (!id_usuario || !id_pet) {
+    if (!Number.isInteger(id_usuario) || !Number.isInteger(id_pet)) {
 
       return res.status(400).json({
 
-        erro: "informe o id do pet e do cliente "
+        msg: "Reenvie o ID do usuário e o ID do pet corretamente."
 
       });
 
-    }
+    } else {
 
-    await db.execute(
+      await db.query(
 
-      `INSERT INTO Cliente_Pet (id_usuario, id_pet) VALUES ($1, $2)`,
-
-      [id_usuario, id_pet]
-
-    );
-
-    return res.status(201).json({
-
-      mensagem: "Pet vinculado ao cliente com sucesso"
-    
-    });
-
-  } catch (error) {
-
-    next(error);
-
-  }
-
-});
-
-
-
-// Listar pets vinculados de um cliente
-
-router.get("/cliente-pet/:id_usuario", async (req, res, next) => {
-
-  try {
-
-    const { id_usuario } = req.params;
-
-    const [pets] = await db.execute(
-
-      `SELECT p.* FROM Cliente_Pet cp JOIN Pets p ON p.id = cp.id_pet WHERE cp.id_usuario = $1`,
-
-      [id_usuario]
-
-    );
-
-    return res.status(200).json(pets);
-
-  } catch (error) {
-
-    next(error);
-
-  }
-
-});
-
-
-
-
-// Desvincular um pet de um cliente
-
-router.delete("/cliente-pet/:id_usuario/:id_pet", async (req, res, next) => {
-
-    try {
-
-      const { id_usuario, id_pet } = req.params;
-
-      const [resultado] = await db.execute(
-
-        `DELETE FROM Cliente_Pet WHERE id_usuario = $1 AND id_pet = $2`,
+        "INSERT INTO Cliente_Pet(id_usuario, id_pet) VALUES($1, $2)",
 
         [id_usuario, id_pet]
-
+          
       );
 
-      if (resultado.affectedRows === 0) {
+      res.status(201).json({
 
-        return res.status(404).json({
-
-          erro: "Vínculo entre pet e cliente não encontrado"
-
-        });
-
-      }
-
-      return res.status(200).json({
-
-        mensagem: "Pet desvinculado respectivo cliente"
+        msg: "Pet cadastrado ao cliente com sucesso!"
 
       });
 
-    } catch (error) {
-
-      next(error);
-
     }
 
+  } catch (error) {
+
+    res.status(400).json({
+
+      msg: "Não foi possível cadastrar o pet ao cliente, tente novamente"
+
+    });
+    
   }
 
-);
-
+});
 
 
 
@@ -257,6 +186,51 @@ router.delete("/cliente-pet/:id_usuario/:id_pet", async (req, res, next) => {
 
 /*cliente /produto*/
 
+app.post("/Cliente_Produto", async (req, res) => {
+
+  const { id_usuario, id_produto, quantidade, data_compra } = req.body;
+
+  try {
+
+    if (
+      !Number.isInteger(id_usuario) || !Number.isInteger(id_produto) || !Number.isInteger(quantidade) || quantidade <= 0 || !data_compra) {
+
+        return res.status(400).json({
+
+          msg: "Informe os dados da compra novamente. A quantidade de itens deve ser maior que zero."
+
+        });
+
+    } else {
+
+      await db.query(
+
+        "INSERT INTO Cliente_Produto(id_usuario, id_produto, quantidade, data_compra) VALUES($1, $2, $3, $4)",
+
+        [id_usuario, id_produto, quantidade, data_compra]
+
+      );
+
+      res.status(201).json({
+
+        msg: "Compra feita com sucesso!"
+
+      });
+
+    }
+
+  } catch (error) {
+
+    res.status(400).json({
+
+      msg: "Não foi possível registrar a compra."
+
+    });
+
+  }
+
+});
+
 /*cliente /vet*/
 
 /*pet /vet*/
@@ -266,3 +240,20 @@ router.delete("/cliente-pet/:id_usuario/:id_pet", async (req, res, next) => {
 
 
 module.exports = router;
+
+/*
+app.post("/Cavaleiro", VerificaLista(GenerosAceitaveis, "sexo"), async (req, res) => {
+    const {nome, sobrenome, idade, sexo, funcao} = req.body;
+
+    try { 
+        if(!Number.isInteger(idade) || idade < 14 || idade > 80) {
+            return res.status(400).json({msg : "Idade deve ser um número inteiro entre 14 e 80."});
+        } else {
+            await db.query("INSERT INTO Cavaleiro(nome, sobrenome, idade, sexo, funcao) VALUES($1, $2, $3, $4, $5)", [nome, sobrenome, idade, sexo, funcao]);
+            res.status(201).json({msg : "Cavaleiro adicionado com sucesso!"});
+        }
+    } catch (error) {
+        res.status(400).json({msg :"Não foi possível cadastrar."});
+    }
+});
+*/
