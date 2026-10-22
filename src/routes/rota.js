@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const IdChecagem = require("../middlewares/IdChecagem");
 
 router.get("/", (req, res) => {
-  res.status(200).json({ msg: "Bem vindo ao express_template_docker!!!" });
+  res.status(200).json({msg: "Bem vindo ao express_template_docker!!!"});
 });
 
 /*Rotas de Usuarios*/
@@ -13,19 +14,49 @@ router.get("/usuarios", async (req, res, next) => {
 })
 
 router.get("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
-
+  const id = req.params.id;
+  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id])
+  res.status(200).json(usuario.rows[0])
 })
 
 router.post("/usuario", async (req, res, next) => {
+  const {nome, email, genero} = req.body
+  
+  const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, genero])
+  res.status(201).json(novoUsuario.rows[0])
+})
 
+router.get("/usuarios", async (req, res, next) => {
+  const ListaUsuarios = await db.query("SELECT * FROM Usuarios")
+  res.status(200).json(ListaUsuarios.rows)
+})
+
+router.get("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+  const id = req.params.id;
+
+  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id])
+  res.status(200).json(usuario.rows[0]) })
+
+router.post("/usuario", async (req, res, next) => {
+  const {nome, email, genero} = req.body
+  
+  const novoUsuario = await db.query("INSERT INTO Usuarios (nome, email, genero) VALUES ($1, $2, $3) RETURNING *",[nome, email, genero])
+  res.status(201).json(novoUsuario.rows[0])
 })
 
 router.put("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+  const id = req.params.id;
+  const {nome, email, genero} = req.body
 
+  const usuarioAtualizado = await db.query("UPDATE Usuarios SET nome = $1, email = $2, genero = $3 WHERE id = $4 RETURNING *", [nome, email, genero, id])
+  res.status(200).json(usuarioAtualizado.rows[0])
 })
 
-router.delete("usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
-
+router.delete("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+  const id = req.params.id;
+  
+  const usuarioRemovido = await db.query("DELETE FROM Usuarios WHERE id = $1 RETURNING *",[id])
+  res.status(200).json({mensagem: "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0] })
 })
 
 /*Rotas de Pets*/
@@ -132,9 +163,22 @@ router.delete("veterinario/:id", IdChecagem("Veterinarios"), async (req, res, ne
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// CLIENTE - PET
 app.post("/Cliente_Pet", async (req, res) => {
 
-  const { id_usuario, id_pet } = req.body;
+  const {id_usuario, id_pet } = req.body;
 
   try {
 
@@ -184,11 +228,11 @@ app.post("/Cliente_Pet", async (req, res) => {
 
 
 
-/*cliente /produto*/
+// CLIENTE - PET
 
 app.post("/Cliente_Produto", async (req, res) => {
 
-  const { id_usuario, id_produto, quantidade, data_compra } = req.body;
+  const {id_usuario, id_produto, quantidade, data_compra } = req.body;
 
   try {
 
@@ -231,29 +275,113 @@ app.post("/Cliente_Produto", async (req, res) => {
 
 });
 
-/*cliente /vet*/
-
-/*pet /vet*/
 
 
+
+
+// CLIENTE - VET
+
+app.post("/Cliente_Veterinario", async (req, res) => {
+
+  const {id_usuario, id_veterinario, data_consulta } = req.body;
+
+  try {
+
+    if (!Number.isInteger(id_usuario) || !Number.isInteger(id_veterinario) || !data_consulta) {
+
+        return res.status(400).json({
+
+          msg: "Informe novamente o ID do usuário, o ID do veterinário e a data da consulta."
+
+        });
+
+    } else {
+
+        await db.query(
+
+          "INSERT INTO Cliente_Veterinario(id_usuario, id_veterinario, data_consulta) VALUES($1, $2, $3)",
+
+          [id_usuario, id_veterinario, data_consulta]
+
+        );
+
+        res.status(201).json({
+
+          msg: "Consulta marcada com sucesso!"
+
+        });
+
+    }
+
+  } catch (error) {
+
+    res.status(400).json({
+
+      msg: "Não foi possível cadastrar a consulta."
+
+    });
+
+  }
+
+});
+
+
+
+// PET - VET 
+
+app.post("/Pet_Veterinario", async (req, res) => {
+
+  const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
+
+  try {
+
+    if ( !Number.isInteger(id_pet) ||  !Number.isInteger(id_veterinario) || !data_atendimento ) {
+    
+      return res.status(400).json({
+
+        msg: "Informe o ID do pet, o ID do veterinário e a data da consuta anterior."
+        
+      });
+
+    } else if (observacoes && observacoes.length > 200) {
+
+      return res.status(400).json({
+
+        msg: "As observações devem ter no máximo 200 caracteres."
+
+      });
+      
+    } else {
+
+      await db.query(
+
+        "INSERT INTO Pet_Veterinario(id_pet, id_veterinario, data_atendimento, observacoes) VALUES($1, $2, $3, $4)",
+
+        [id_pet, id_veterinario, data_atendimento, observacoes || null]
+
+      );
+
+      res.status(201).json({
+
+        msg: "Atendimento veterinário cadastrado com sucesso!"
+
+      });
+
+    }
+
+  } catch (error) {
+
+      res.status(400).json({
+
+        msg: "Não foi possível cadastrar o atendimento veterinário."
+
+      });
+
+  }
+
+});
 
 
 
 module.exports = router;
 
-/*
-app.post("/Cavaleiro", VerificaLista(GenerosAceitaveis, "sexo"), async (req, res) => {
-    const {nome, sobrenome, idade, sexo, funcao} = req.body;
-
-    try { 
-        if(!Number.isInteger(idade) || idade < 14 || idade > 80) {
-            return res.status(400).json({msg : "Idade deve ser um número inteiro entre 14 e 80."});
-        } else {
-            await db.query("INSERT INTO Cavaleiro(nome, sobrenome, idade, sexo, funcao) VALUES($1, $2, $3, $4, $5)", [nome, sobrenome, idade, sexo, funcao]);
-            res.status(201).json({msg : "Cavaleiro adicionado com sucesso!"});
-        }
-    } catch (error) {
-        res.status(400).json({msg :"Não foi possível cadastrar."});
-    }
-});
-*/
