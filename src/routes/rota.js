@@ -13,7 +13,7 @@ router.get("/usuarios", async (req, res, next) => {
   res.status(200).json(ListaUsuarios.rows)
 })
 
-router.get("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
   const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id])
   res.status(200).json(usuario.rows[0])
@@ -31,7 +31,7 @@ router.get("/usuarios", async (req, res, next) => {
   res.status(200).json(ListaUsuarios.rows)
 })
 
-router.get("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
 
   const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id])
@@ -44,7 +44,7 @@ router.post("/usuario", async (req, res, next) => {
   res.status(201).json(novoUsuario.rows[0])
 })
 
-router.put("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+router.put("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
   const {nome, email, genero} = req.body
 
@@ -52,7 +52,7 @@ router.put("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
   res.status(200).json(usuarioAtualizado.rows[0])
 })
 
-router.delete("/usuario/:id", IdChecagem("Usuarios"), async (req, res, next) => {
+router.delete("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
   
   const usuarioRemovido = await db.query("DELETE FROM Usuarios WHERE id = $1 RETURNING *",[id])
@@ -64,7 +64,7 @@ router.get("/pets", async (req, res, next) => {
 
 })
 
-router.get("/pet/:id", IdChecagem("Pets"), async (req, res, next) => {
+router.get("/pet/:id", IdChecagem, async (req, res, next) => {
   
 })
 
@@ -79,11 +79,11 @@ router.post("/pet", async (req, res, next) => {
     }
 })
 
-router.put("/pet/:id", IdChecagem("Pets"), async (req, res, next) => {
+router.put("/pet/:id", IdChecagem, async (req, res, next) => {
   
 })
 
-router.delete("/pet/:id", IdChecagem("Pets"), async (req, res, next) => {
+router.delete("/pet/:id", IdChecagem, async (req, res, next) => {
   
 })
 
@@ -93,7 +93,7 @@ router.get("/produtos", async (req, res, next) => {
   res.status(200).json(ListaProdutos.rows)
 })
 
-router.get("/produto/:id", IdChecagem("Produtos"), async (req, res, next) => {
+router.get("/produto/:id", IdChecagem, async (req, res, next) => {
 
 })
 
@@ -101,11 +101,11 @@ router.post("/produto", async (req, res, next) => {
 
 })
 
-router.put("/produto/:id", IdChecagem("Produtos"), async (req, res, next) => {
+router.put("/produto/:id", IdChecagem, async (req, res, next) => {
 
 })
 
-router.delete("produto/:id", IdChecagem("Produtos"), async (req, res, next) => {
+router.delete("produto/:id", IdChecagem, async (req, res, next) => {
 
 })
 
@@ -115,7 +115,7 @@ router.get("/veterinarios", async (req, res, next) => {
   res.status(200).json(ListaVeterinarios.rows)
 })
 
-router.get("/veterinario/:id", IdChecagem("Veterinarios"), async (req, res, next) => {
+router.get("/veterinario/:id", IdChecagem, async (req, res, next) => {
 
 })
 
@@ -123,11 +123,11 @@ router.post("/veterinario", async (req, res, next) => {
 
 })
 
-router.put("/veterinario/:id", IdChecagem("Veterinarios"), async (req, res, next) => {
+router.put("/veterinario/:id", IdChecagem, async (req, res, next) => {
 
 })
 
-router.delete("veterinario/:id", IdChecagem("Veterinarios"), async (req, res, next) => {
+router.delete("veterinario/:id", IdChecagem, async (req, res, next) => {
 
 })
 
@@ -176,37 +176,25 @@ router.delete("veterinario/:id", IdChecagem("Veterinarios"), async (req, res, ne
 
 
 // CLIENTE - PET
-app.post("/Cliente_Pet", async (req, res) => {
+app.post("/Cliente_Pet", IdChecagem, async (req, res) => {
 
   const {id_usuario, id_pet } = req.body;
 
   try {
 
-    if (!Number.isInteger(id_usuario) || !Number.isInteger(id_pet)) {
+    await db.query(
 
-      return res.status(400).json({
+      "INSERT INTO Cliente_Pet(id_usuario, id_pet) VALUES($1, $2)",
 
-        msg: "Reenvie o ID do usuário e o ID do pet corretamente."
+      [id_usuario, id_pet]
+        
+    );
 
-      });
+    res.status(201).json({
 
-    } else {
+      msg: "Pet cadastrado ao cliente com sucesso!"
 
-      await db.query(
-
-        "INSERT INTO Cliente_Pet(id_usuario, id_pet) VALUES($1, $2)",
-
-        [id_usuario, id_pet]
-          
-      );
-
-      res.status(201).json({
-
-        msg: "Pet cadastrado ao cliente com sucesso!"
-
-      });
-
-    }
+    });
 
   } catch (error) {
 
@@ -230,40 +218,27 @@ app.post("/Cliente_Pet", async (req, res) => {
 
 // CLIENTE - PET
 
-app.post("/Cliente_Produto", async (req, res) => {
+app.post("/Cliente_Produto", IdChecagem , async (req, res) => {
 
   const {id_usuario, id_produto, quantidade, data_compra } = req.body;
 
   try {
 
-    if (
-      !Number.isInteger(id_usuario) || !Number.isInteger(id_produto) || !Number.isInteger(quantidade) || quantidade <= 0 || !data_compra) {
+    await db.query(
 
-        return res.status(400).json({
+      "INSERT INTO Cliente_Produto(id_usuario, id_produto, quantidade, data_compra) VALUES($1, $2, $3, $4)",
 
-          msg: "Informe os dados da compra novamente. A quantidade de itens deve ser maior que zero."
+      [id_usuario, id_produto, quantidade, data_compra]
 
-        });
+    );
 
-    } else {
+    res.status(201).json({
 
-      await db.query(
+      msg: "Compra feita com sucesso!"
 
-        "INSERT INTO Cliente_Produto(id_usuario, id_produto, quantidade, data_compra) VALUES($1, $2, $3, $4)",
+    });
 
-        [id_usuario, id_produto, quantidade, data_compra]
-
-      );
-
-      res.status(201).json({
-
-        msg: "Compra feita com sucesso!"
-
-      });
-
-    }
-
-  } catch (error) {
+    } catch (error) {
 
     res.status(400).json({
 
@@ -281,39 +256,27 @@ app.post("/Cliente_Produto", async (req, res) => {
 
 // CLIENTE - VET
 
-app.post("/Cliente_Veterinario", async (req, res) => {
+app.post("/Cliente_Veterinario", IdChecagem , async (req, res) => {
 
   const {id_usuario, id_veterinario, data_consulta } = req.body;
 
   try {
 
-    if (!Number.isInteger(id_usuario) || !Number.isInteger(id_veterinario) || !data_consulta) {
+    await db.query(
 
-        return res.status(400).json({
+        "INSERT INTO Cliente_Veterinario(id_usuario, id_veterinario, data_consulta) VALUES($1, $2, $3)",
 
-          msg: "Informe novamente o ID do usuário, o ID do veterinário e a data da consulta."
+        [id_usuario, id_veterinario, data_consulta]
 
-        });
+      );
 
-    } else {
+      res.status(201).json({
 
-        await db.query(
+        msg: "Consulta marcada com sucesso!"
 
-          "INSERT INTO Cliente_Veterinario(id_usuario, id_veterinario, data_consulta) VALUES($1, $2, $3)",
+      });
 
-          [id_usuario, id_veterinario, data_consulta]
-
-        );
-
-        res.status(201).json({
-
-          msg: "Consulta marcada com sucesso!"
-
-        });
-
-    }
-
-  } catch (error) {
+    } catch (error) {
 
     res.status(400).json({
 
@@ -329,21 +292,13 @@ app.post("/Cliente_Veterinario", async (req, res) => {
 
 // PET - VET 
 
-app.post("/Pet_Veterinario", async (req, res) => {
+app.post("/Pet_Veterinario", IdChecagem , async (req, res) => {
 
   const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
 
   try {
 
-    if ( !Number.isInteger(id_pet) ||  !Number.isInteger(id_veterinario) || !data_atendimento ) {
-    
-      return res.status(400).json({
-
-        msg: "Informe o ID do pet, o ID do veterinário e a data da consuta anterior."
-        
-      });
-
-    } else if (observacoes && observacoes.length > 200) {
+    if (observacoes && observacoes.length > 200) {
 
       return res.status(400).json({
 
