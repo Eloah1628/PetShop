@@ -1,4 +1,4 @@
-CREATE DATABASE IF "PetShopLuzzie" NOT EXISTS;
+CREATE DATABASE IF NOT EXISTS "PetShopLuzzie";
 USE PetShopLuzzie;
 
 CREATE TABLE Usuarios (
@@ -10,17 +10,17 @@ CREATE TABLE Usuarios (
 CREATE TABLE Pets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(80) NOT NULL,
-    idade INT CHECK (idade IS NULL OR idade >= 0);
-    sexo CHAR(1) NOT NULL CHECK (sexo IN ('F', 'f', 'M', 'm'));
+    idade INT CHECK (idade IS NULL OR idade >= 0),
+    sexo CHAR(1) NOT NULL CHECK (sexo IN ('F', 'f', 'M', 'm')),
     descricao VARCHAR(140) NOT NULL,
-    historico_vet VARCHAR(200);
+    historico_vet VARCHAR(200),
     estado_atual VARCHAR(200)
 );
 
 CREATE TABLE Produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(40) NOT NULL,
-    preco DECIMAL(10,2) NOT NULL CHECK (preco >= 0);
+    preco DECIMAL(10,2) NOT NULL CHECK (preco >= 0),
     descricao VARCHAR(60) NOT NULL,
     quant_estoque INT NOT NULL CHECK (quant_estoque >= 0)
 );
@@ -36,7 +36,7 @@ CREATE TABLE Cliente_Pet (
     id_usuario INT NOT NULL,
     id_pet INT NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_pet);
+    PRIMARY KEY (id_usuario, id_pet),
 
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_pet) REFERENCES Pets(id) ON DELETE CASCADE
@@ -45,10 +45,10 @@ CREATE TABLE Cliente_Pet (
 CREATE TABLE Cliente_Produto (
     id_usuario INT NOT NULL,
     id_produto INT NOT NULL,
-    quantidade INT NOT NULL DEFAULT 1 CHECK (quantidade > 0);
+    quantidade INT NOT NULL DEFAULT 1 CHECK (quantidade > 0),
     data_compra DATE NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_produto, data_compra);
+    PRIMARY KEY (id_usuario, id_produto, data_compra),
 
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_produto) REFERENCES Produtos(id) ON DELETE CASCADE
@@ -59,7 +59,7 @@ CREATE TABLE Cliente_Veterinario (
     id_veterinario INT NOT NULL,
     data_consulta DATE NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_veterinario, data_consulta);
+    PRIMARY KEY (id_usuario, id_veterinario, data_consulta),
 
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_veterinario) REFERENCES Veterinarios(id) ON DELETE CASCADE
@@ -69,9 +69,9 @@ CREATE TABLE Pet_Veterinario (
     id_pet INT NOT NULL,
     id_veterinario INT NOT NULL,
     data_atendimento DATE NOT NULL,
-    observacoes VARCHAR(200);
+    observacoes VARCHAR(200),
 
-    PRIMARY KEY (id_pet, id_veterinario, data_atendimento);
+    PRIMARY KEY (id_pet, id_veterinario, data_atendimento),
 
     FOREIGN KEY (id_pet) REFERENCES Pets(id) ON DELETE CASCADE,
     FOREIGN KEY (id_veterinario) REFERENCES Veterinarios(id) ON DELETE CASCADE
