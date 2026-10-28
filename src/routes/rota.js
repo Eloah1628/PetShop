@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
-const IdChecagem = require("../middlewares/IdChecagem");
+const {IdChecagem, IdBodyChecagem} = require('../middlewares/Checagens.js');
 
 router.get("/", (req, res) => {
   res.status(200).json({msg: "Bem vindo ao express_template_docker!!!"});
@@ -15,47 +15,47 @@ router.get("/usuarios", async (req, res, next) => {
 
 router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
-  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id])
-  res.status(200).json(usuario.rows[0])
+  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
+  res.status(200).json(usuario.rows[0]);
 })
 
 router.post("/usuario", async (req, res, next) => {
   const {nome, email, genero} = req.body
   
-  const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, genero])
-  res.status(201).json(novoUsuario.rows[0])
+  const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, genero]);
+  res.status(201).json(novoUsuario.rows[0]);
 })
 
 router.get("/usuarios", async (req, res, next) => {
-  const ListaUsuarios = await db.query("SELECT * FROM Usuarios")
-  res.status(200).json(ListaUsuarios.rows)
+  const ListaUsuarios = await db.query("SELECT * FROM Usuarios");
+  res.status(200).json(ListaUsuarios.rows);
 })
 
 router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
 
-  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id])
-  res.status(200).json(usuario.rows[0]) })
+  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
+  res.status(200).json(usuario.rows[0]); });
 
 router.post("/usuario", async (req, res, next) => {
-  const {nome, email, genero} = req.body
+  const {nome, email, genero} = req.body;
   
-  const novoUsuario = await db.query("INSERT INTO Usuarios (nome, email, genero) VALUES ($1, $2, $3) RETURNING *",[nome, email, genero])
-  res.status(201).json(novoUsuario.rows[0])
+  const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *",[nome, email, genero]);
+  res.status(201).json(novoUsuario.rows[0]);
 })
 
 router.put("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
-  const {nome, email, genero} = req.body
+  const {nome, email, genero} = req.body;
 
-  const usuarioAtualizado = await db.query("UPDATE Usuarios SET nome = $1, email = $2, genero = $3 WHERE id = $4 RETURNING *", [nome, email, genero, id])
-  res.status(200).json(usuarioAtualizado.rows[0])
+  const usuarioAtualizado = await db.query("UPDATE Usuarios SET nome = $1, email = $2, genero = $3 WHERE id = $4 RETURNING *", [nome, email, genero, id]);
+  res.status(200).json(usuarioAtualizado.rows[0]);
 })
 
 router.delete("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
   
-  const usuarioRemovido = await db.query("DELETE FROM Usuarios WHERE id = $1 RETURNING *",[id])
+  const usuarioRemovido = await db.query("DELETE FROM Usuarios WHERE id = $1 RETURNING *",[id]);
   res.status(200).json({mensagem: "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0] })
 })
 
@@ -77,14 +77,22 @@ router.post("/pet", async (req, res, next) => {
     if (!Generos.includes(genero)) {
       return res.status(400).json({msg : "Gênero inválido."});
     }
+
+    const novoPet = await db.query("INSERT INTO Pets(nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES($1, $2, $3, $4, $5, $6)", [nome, idade, sexo, descricao, historico_vet, estado_atual])
 })
 
 router.put("/pet/:id", IdChecagem, async (req, res, next) => {
-  
+  const id = req.params.id;
+  const {nome, idade, sexo, descricao, historico_vet, estado_atual} = req.body;
+
+  const petAtualizado = await db.query("UPDATE Pets SET nome = $1, idadei = $2, sexo = $3, descricao = $4, historico_vet = $5, estado_atual = $6 WHERE id = $7", [nome, idade, sexo, descricao, historico_vet, estado_atual, id]);
+  res.status(200).json(petAtualizado.rows[0]);
 })
 
 router.delete("/pet/:id", IdChecagem, async (req, res, next) => {
-  
+  const id = req.params.id;
+  const petRemovido = await db.query("DELETE * FROM Pets WHERE id = $1", [id])
+  res.status(200).json({msg : "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0]})
 })
 
 /*Rotas de Produtos*/
@@ -176,7 +184,7 @@ router.delete("veterinario/:id", IdChecagem, async (req, res, next) => {
 
 
 // CLIENTE - PET
-app.post("/Cliente_Pet", IdChecagem, async (req, res) => {
+app.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
   const {id_usuario, id_pet } = req.body;
 
@@ -218,7 +226,7 @@ app.post("/Cliente_Pet", IdChecagem, async (req, res) => {
 
 // CLIENTE - PET
 
-app.post("/Cliente_Produto", IdChecagem , async (req, res) => {
+app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
   const {id_usuario, id_produto, quantidade, data_compra } = req.body;
 
@@ -256,7 +264,7 @@ app.post("/Cliente_Produto", IdChecagem , async (req, res) => {
 
 // CLIENTE - VET
 
-app.post("/Cliente_Veterinario", IdChecagem , async (req, res) => {
+app.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 
   const {id_usuario, id_veterinario, data_consulta } = req.body;
 
@@ -292,7 +300,7 @@ app.post("/Cliente_Veterinario", IdChecagem , async (req, res) => {
 
 // PET - VET 
 
-app.post("/Pet_Veterinario", IdChecagem , async (req, res) => {
+app.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
   const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
 
