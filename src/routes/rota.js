@@ -184,6 +184,8 @@ router.delete("veterinario/:id", IdChecagem, async (req, res, next) => {
 
 
 // CLIENTE - PET
+
+
 app.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
   const {id_usuario, id_pet } = req.body;
@@ -215,6 +217,113 @@ app.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
   }
 
 });
+
+// GET
+app.get("/Cliente_Pet", async (req, res) => {
+
+  try {
+
+    const resultado = await db.query(
+
+      "SELECT * FROM Cliente_Pet"
+
+    );
+
+    res.status(200).json(resultado.rows);
+
+  } catch (error) {
+
+    res.status(400).json({
+
+      msg: "Não foi possível buscar os pets dos clientes."
+
+    });
+
+  }
+
+});
+
+
+// PUT
+app.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+
+  const {id_usuario, id_pet, novo_id_usuario, novo_id_pet } = req.body;
+
+  try {
+
+    await db.query(
+
+      "UPDATE Cliente_Pet SET id_usuario = $1, id_pet = $2 WHERE id_usuario = $3 AND id_pet = $4",
+
+      [novo_id_usuario, novo_id_pet, id_usuario, id_pet]
+
+    );
+
+    res.status(200).json({
+
+      msg: "Cadastro do pet ao cliente atualizado com sucesso!"
+
+    });
+
+  } catch (error) {
+
+    res.status(400).json({
+
+      msg: "Não foi possível atualizar o cadastro do pet ao cliente."
+
+    });
+
+  }
+
+});
+
+
+// DELETE
+app.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+
+  const {id_usuario, id_pet } = req.body;
+
+  try {
+
+    await db.query(
+
+      "DELETE FROM Cliente_Pet WHERE id_usuario = $1 AND id_pet = $2",
+
+      [id_usuario, id_pet]
+
+    );
+
+    res.status(200).json({
+
+      msg: "Pet removido do cliente com sucesso!"
+
+    });
+
+  } catch (error) {
+
+    res.status(400).json({
+
+      msg: "Não foi possível remover o pet do cliente."
+
+    });
+
+  }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
