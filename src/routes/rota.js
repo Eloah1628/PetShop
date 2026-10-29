@@ -334,81 +334,75 @@ app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-app.get("/Pet_Veterinario", async (req, res) => {
+app.get("/Cliente_Produto", async (req, res) => {
 
   try {
   
-    const resultado = await db.query("SELECT * FROM Pet_Veterinario");
+    const resultado = await db.query( "SELECT * FROM Cliente_Produto");
     
     res.status(200).json(resultado.rows);
-  
-    } catch (error) {
     
-      res.status(400).json({ msg: "Não foi possível buscar os atendimentos veterinários." });
+  } catch (error) {
+  
+    res.status(400).json({ msg: "Não foi possível buscar as compras dos clientes." });
+    
+  }
+  
+  });
+  
+  
+// PUT
+app.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
+
+  const {id_usuario, id_produto, quantidade, data_compra } = req.body;
+  
+  try {
+  
+    await db.query(
+      
+      "UPDATE Cliente_Produto SET quantidade = $1, data_compra = $2 WHERE id_usuario = $3 AND id_produto = $4",
+      
+      [quantidade, data_compra, id_usuario, id_produto]
+      
+    );
+  
+    res.status(200).json({ msg: "Compra atualizada com sucesso!" });
+  
+  } catch (error) {
+  
+    res.status(400).json({ msg: "Não foi possível atualizar a compra."});
+  
+  }
+
+});
+
+  
+// DELETE
+app.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
+  
+  const {id_usuario, id_produto } = req.body;
+  
+  try {
+  
+    await db.query(
+    
+      "DELETE FROM Cliente_Produto WHERE id_usuario = $1 AND id_produto = $2",
+      
+      [id_usuario, id_produto]
+    
+    );
+  
+    res.status(200).json({msg: "Compra removida com sucesso!"});
+  
+  } catch (error) {
+  
+    res.status(400).json({msg: "Não foi possível remover a compra." });
   
   }
   
 });
   
   
-  // PUT
-  app.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
-  
-    const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
-    
-    try {
-    
-      if (observacoes && observacoes.length > 200) {
-      
-        return res.status(400).json({ msg: "As observações devem ter no máximo 200 caracteres." });
-    
-      } else {
-      
-        await db.query(
-        
-          "UPDATE Pet_Veterinario SET data_atendimento = $1, observacoes = $2 WHERE id_pet = $3 AND id_veterinario = $4",
-          
-          [data_atendimento, observacoes || null, id_pet, id_veterinario]
-        
-        );
-      
-        res.status(200).json({ msg: "Atendimento veterinário atualizado com sucesso!"});
-      
-      }
-      
-    } catch (error) {
-    
-      res.status(400).json({ msg: "Não foi possível atualizar o atendimento veterinário." });
-    
-    }
-  
-  });
-  
-  
-  // DELETE
-  app.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
-  
-    const {id_pet, id_veterinario } = req.body;
-    
-    try {
-    
-      await db.query(
-      
-        "DELETE FROM Pet_Veterinario WHERE id_pet = $1 AND id_veterinario = $2",
-        
-        [id_pet, id_veterinario]
-      
-      );
-      
-      res.status(200).json({ msg: "Atendimento veterinário removido com sucesso!" });
-      
-    } catch (error) {
-    
-      res.status(400).json({msg: "Não foi possível remover o atendimento veterinário."});
-    
-    }
-  
-  });
 
 
 
