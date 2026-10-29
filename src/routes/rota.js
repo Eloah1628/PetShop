@@ -296,16 +296,6 @@ app.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
 // CLIENTE - PRODUTO
 
 app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
@@ -558,6 +548,84 @@ app.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       });
 
+  }
+
+});
+
+
+// GET
+app.get("/Pet_Veterinario", async (req, res) => {
+
+  try {
+  
+    const resultado = await db.query( "SELECT * FROM Pet_Veterinario");
+    
+    res.status(200).json(resultado.rows);
+  
+  } catch (error) {
+  
+   res.status(400).json({ msg: "Não foi possível buscar os atendimentos veterinários." });
+  
+  }
+  
+});
+  
+  
+// PUT
+app.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+
+  const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
+  
+  try {
+  
+    if (observacoes && observacoes.length > 200) {
+    
+      return res.status(400).json({msg: "As observações devem ter no máximo 200 caracteres."});
+      
+    } else {
+    
+      await db.query(
+      
+        "UPDATE Pet_Veterinario SET data_atendimento = $1, observacoes = $2 WHERE id_pet = $3 AND id_veterinario = $4",
+        
+        [data_atendimento, observacoes || null, id_pet, id_veterinario]
+      
+      );
+      
+      res.status(200).json({msg: "Atendimento veterinário atualizado com sucesso!"});
+    
+    }
+  
+  } catch (error) {
+  
+    res.status(400).json({msg: "Não foi possível atualizar o atendimento veterinário."});
+  
+  }
+  
+});
+  
+  
+// DELETE
+app.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+
+  const {id_pet, id_veterinario } = req.body;
+  
+  try {
+  
+    await db.query(
+    
+      "DELETE FROM Pet_Veterinario WHERE id_pet = $1 AND id_veterinario = $2",
+      
+      [id_pet, id_veterinario]
+    
+    );
+  
+    res.status(200).json({ msg: "Atendimento veterinário removido com sucesso!"});
+
+  } catch (error) {
+  
+    res.status(400).json({msg: "Não foi possível remover o atendimento veterinário."});
+  
   }
 
 });
