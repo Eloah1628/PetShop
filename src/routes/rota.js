@@ -449,6 +449,78 @@ app.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 });
 
 
+// GET
+app.get("/Cliente_Veterinario", async (req, res) => {
+
+  try {
+  
+    const resultado = await db.query( "SELECT * FROM Cliente_Veterinario" );
+    
+    res.status(200).json(resultado.rows);
+  
+  } catch (error) {
+  
+    res.status(400).json({msg: "Não foi possível buscar as consultas dos clientes."});
+    
+  }
+  
+});
+  
+  
+// PUT
+app.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
+  
+  const {id_usuario, id_veterinario, data_consulta } = req.body;
+
+  try {
+  
+    await db.query(
+    
+      "UPDATE Cliente_Veterinario SET data_consulta = $1 WHERE id_usuario = $2 AND id_veterinario = $3",
+      
+      [data_consulta, id_usuario, id_veterinario]
+    
+    );
+    
+    res.status(200).json({msg: "Consulta atualizada com sucesso!"});
+  
+  } catch (error) {
+  
+  res.status(400).json({msg: "Não foi possível atualizar a consulta."});
+  
+  }
+    
+});
+  
+  
+// DELETE
+app.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
+  
+  const {id_usuario, id_veterinario } = req.body;
+  
+  try {
+  
+    await db.query(
+
+      "DELETE FROM Cliente_Veterinario WHERE id_usuario = $1 AND id_veterinario = $2",
+
+      [id_usuario, id_veterinario]
+
+    );
+  
+    res.status(200).json({msg: "Consulta removida com sucesso!" });
+  
+  } catch (error) {
+  
+  res.status(400).json({ msg: "Não foi possível remover a consulta." });
+  
+  }
+  
+});
+
+
+
+
 
 // PET - VET 
 
