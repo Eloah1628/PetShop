@@ -200,23 +200,16 @@ app.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
         
     );
 
-    res.status(201).json({
-
-      msg: "Pet cadastrado ao cliente com sucesso!"
-
-    });
+    res.status(201).json({msg: "Pet cadastrado ao cliente com sucesso!"});
 
   } catch (error) {
 
-    res.status(400).json({
-
-      msg: "Não foi possível cadastrar o pet ao cliente, tente novamente"
-
-    });
+    res.status(400).json({msg: "Não foi possível cadastrar o pet ao cliente, tente novamente"});
     
   }
 
 });
+
 
 // GET
 app.get("/Cliente_Pet", async (req, res) => {
@@ -233,11 +226,7 @@ app.get("/Cliente_Pet", async (req, res) => {
 
   } catch (error) {
 
-    res.status(400).json({
-
-      msg: "Não foi possível buscar os pets dos clientes."
-
-    });
+    res.status(400).json({ msg: "Não foi possível buscar os pets dos clientes."});
 
   }
 
@@ -259,19 +248,11 @@ app.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
     );
 
-    res.status(200).json({
-
-      msg: "Cadastro do pet ao cliente atualizado com sucesso!"
-
-    });
+    res.status(200).json({msg: "Cadastro do pet ao cliente atualizado com sucesso!" });
 
   } catch (error) {
 
-    res.status(400).json({
-
-      msg: "Não foi possível atualizar o cadastro do pet ao cliente."
-
-    });
+    res.status(400).json({msg: "Não foi possível atualizar o cadastro do pet ao cliente."});
 
   }
 
@@ -293,19 +274,11 @@ app.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
     );
 
-    res.status(200).json({
-
-      msg: "Pet removido do cliente com sucesso!"
-
-    });
+    res.status(200).json({msg: "Pet removido do cliente com sucesso!" });
 
   } catch (error) {
 
-    res.status(400).json({
-
-      msg: "Não foi possível remover o pet do cliente."
-
-    });
+    res.status(400).json({msg: "Não foi possível remover o pet do cliente."});
 
   }
 
@@ -333,7 +306,7 @@ app.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 
 
-// CLIENTE - PET
+// CLIENTE - PRODUTO
 
 app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
@@ -349,23 +322,93 @@ app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
     );
 
-    res.status(201).json({
-
-      msg: "Compra feita com sucesso!"
-
-    });
+    res.status(201).json({msg: "Compra feita com sucesso!"});
 
     } catch (error) {
 
-    res.status(400).json({
-
-      msg: "Não foi possível registrar a compra."
-
-    });
+    res.status(400).json({msg: "Não foi possível registrar a compra."});
 
   }
 
 });
+
+
+// GET
+app.get("/Pet_Veterinario", async (req, res) => {
+
+  try {
+  
+    const resultado = await db.query("SELECT * FROM Pet_Veterinario");
+    
+    res.status(200).json(resultado.rows);
+  
+    } catch (error) {
+    
+      res.status(400).json({ msg: "Não foi possível buscar os atendimentos veterinários." });
+  
+  }
+  
+});
+  
+  
+  // PUT
+  app.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+  
+    const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
+    
+    try {
+    
+      if (observacoes && observacoes.length > 200) {
+      
+        return res.status(400).json({ msg: "As observações devem ter no máximo 200 caracteres." });
+    
+      } else {
+      
+        await db.query(
+        
+          "UPDATE Pet_Veterinario SET data_atendimento = $1, observacoes = $2 WHERE id_pet = $3 AND id_veterinario = $4",
+          
+          [data_atendimento, observacoes || null, id_pet, id_veterinario]
+        
+        );
+      
+        res.status(200).json({ msg: "Atendimento veterinário atualizado com sucesso!"});
+      
+      }
+      
+    } catch (error) {
+    
+      res.status(400).json({ msg: "Não foi possível atualizar o atendimento veterinário." });
+    
+    }
+  
+  });
+  
+  
+  // DELETE
+  app.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+  
+    const {id_pet, id_veterinario } = req.body;
+    
+    try {
+    
+      await db.query(
+      
+        "DELETE FROM Pet_Veterinario WHERE id_pet = $1 AND id_veterinario = $2",
+        
+        [id_pet, id_veterinario]
+      
+      );
+      
+      res.status(200).json({ msg: "Atendimento veterinário removido com sucesso!" });
+      
+    } catch (error) {
+    
+      res.status(400).json({msg: "Não foi possível remover o atendimento veterinário."});
+    
+    }
+  
+  });
 
 
 
