@@ -9,63 +9,113 @@ router.get("/", (req, res) => {
 
 /*Rotas de Usuarios*/
 router.get("/usuarios", async (req, res, next) => {
-  const ListaUsuarios = await db.query("SELECT * FROM Usuarios")
-  res.status(200).json(ListaUsuarios.rows)
+  try {
+    const ListaUsuarios = await db.query("SELECT * FROM Usuarios")
+    res.status(200).json(ListaUsuarios.rows)
+
+  } catch (error) {
+    
+  }
+
+  
 })
 
 router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
-  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
-  res.status(200).json(usuario.rows[0]);
+  try {
+    const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
+    res.status(200).json(usuario.rows[0]);
+
+  } catch (error) {
+    
+  }
 })
 
 router.post("/usuario", async (req, res, next) => {
   const {nome, email, genero} = req.body
+  try {
+    const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, genero]);
+    res.status(201).json(novoUsuario.rows[0]);
+
+  } catch (error) {
+    
+  }
   
-  const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, genero]);
-  res.status(201).json(novoUsuario.rows[0]);
 })
 
 router.get("/usuarios", async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    
+  }
   const ListaUsuarios = await db.query("SELECT * FROM Usuarios");
   res.status(200).json(ListaUsuarios.rows);
+
 })
 
 router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
-
-  const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
-  res.status(200).json(usuario.rows[0]); });
+  try {
+    const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
+    res.status(200).json(usuario.rows[0]);
+  } catch (error) {
+    
+  }
+  
 
 router.post("/usuario", async (req, res, next) => {
   const {nome, email, genero} = req.body;
+  try {
+    const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *",[nome, email, genero]);
+    res.status(201).json(novoUsuario.rows[0]);
+  } catch (error) {
+    
+  }
   
-  const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *",[nome, email, genero]);
-  res.status(201).json(novoUsuario.rows[0]);
 })
 
 router.put("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
   const {nome, email, genero} = req.body;
-
-  const usuarioAtualizado = await db.query("UPDATE Usuarios SET nome = $1, email = $2, genero = $3 WHERE id = $4 RETURNING *", [nome, email, genero, id]);
-  res.status(200).json(usuarioAtualizado.rows[0]);
+  try {
+    const usuarioAtualizado = await db.query("UPDATE Usuarios SET nome = $1, email = $2, genero = $3 WHERE id = $4 RETURNING *", [nome, email, genero, id]);
+    res.status(200).json(usuarioAtualizado.rows[0]);
+  } catch (error) {
+    
+  }
+  
 })
 
 router.delete("/usuario/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
+  try {
+    const usuarioRemovido = await db.query("DELETE FROM Usuarios WHERE id = $1 RETURNING *",[id]);
+    res.status(200).json({mensagem: "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0] })
+  } catch (error) {
+    
+  }
   
-  const usuarioRemovido = await db.query("DELETE FROM Usuarios WHERE id = $1 RETURNING *",[id]);
-  res.status(200).json({mensagem: "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0] })
 })
 
 /*Rotas de Pets*/
 router.get("/pets", async (req, res, next) => {
-  const ListaPets = await db.query("SELECT * FROM Pets");
-  res.status(200).json(ListaPets.rows[0])
+  try {
+    const ListaPets = await db.query("SELECT * FROM Pets");
+    res.status(200).json(ListaPets.rows[0])
+
+  } catch (error) {
+    
+  }
+
 })
 
 router.get("/pet/:id", IdChecagem, async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    
+  }
   const id = req.params.id;
   const Pet = await db.query("SELECT * FROM Pets WHERE id = $1", [id])
 })
@@ -75,12 +125,18 @@ const Generos = ['F', 'f', 'M', 'm']
 
 router.post("/pet", async (req, res, next) => {
   const {genero} = req.body;
-
+  try {
     if (!Generos.includes(genero)) {
       return res.status(400).json({msg : "Gênero inválido."});
+      
+      const novoPet = await db.query("INSERT INTO Pets(nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES($1, $2, $3, $4, $5, $6)", [nome, idade, sexo, descricao, historico_vet, estado_atual])
     }
+  } catch (error) {
+    
+  }
+    
 
-    const novoPet = await db.query("INSERT INTO Pets(nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES($1, $2, $3, $4, $5, $6)", [nome, idade, sexo, descricao, historico_vet, estado_atual])
+    
 })
 
 router.put("/pet/:id", IdChecagem, async (req, res, next) => {
@@ -214,7 +270,7 @@ router.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 
 // GET
-app.get("/Cliente_Pet", async (req, res) => {
+router.get("/Cliente_Pet", async (req, res) => {
 
   try {
 
@@ -236,7 +292,7 @@ app.get("/Cliente_Pet", async (req, res) => {
 
 
 // PUT
-app.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+router.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
   const {id_usuario, id_pet, novo_id_usuario, novo_id_pet } = req.body;
 
@@ -262,7 +318,7 @@ app.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 
 // DELETE
-app.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+router.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
   const {id_usuario, id_pet } = req.body;
 
@@ -300,7 +356,7 @@ app.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 // CLIENTE - PRODUTO
 
-app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
+router.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
   const {id_usuario, id_produto, quantidade, data_compra } = req.body;
 
@@ -326,7 +382,7 @@ app.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-app.get("/Cliente_Produto", async (req, res) => {
+router.get("/Cliente_Produto", async (req, res) => {
 
   try {
   
@@ -344,7 +400,7 @@ app.get("/Cliente_Produto", async (req, res) => {
   
   
 // PUT
-app.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
+router.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
 
   const {id_usuario, id_produto, quantidade, data_compra } = req.body;
   
@@ -370,7 +426,7 @@ app.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
 
   
 // DELETE
-app.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
+router.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
   
   const {id_usuario, id_produto } = req.body;
   
@@ -402,7 +458,7 @@ app.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
 
 // CLIENTE - VET
 
-app.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
+router.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 
   const {id_usuario, id_veterinario, data_consulta } = req.body;
 
@@ -436,7 +492,7 @@ app.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-app.get("/Cliente_Veterinario", async (req, res) => {
+router.get("/Cliente_Veterinario", async (req, res) => {
 
   try {
   
@@ -454,7 +510,7 @@ app.get("/Cliente_Veterinario", async (req, res) => {
   
   
 // PUT
-app.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
+router.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
   
   const {id_usuario, id_veterinario, data_consulta } = req.body;
 
@@ -480,7 +536,7 @@ app.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
   
   
 // DELETE
-app.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
+router.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
   
   const {id_usuario, id_veterinario } = req.body;
   
@@ -510,7 +566,7 @@ app.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
 
 // PET - VET 
 
-app.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
+router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
   const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
 
@@ -556,7 +612,7 @@ app.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-app.get("/Pet_Veterinario", async (req, res) => {
+router.get("/Pet_Veterinario", async (req, res) => {
 
   try {
   
@@ -574,7 +630,7 @@ app.get("/Pet_Veterinario", async (req, res) => {
   
   
 // PUT
-app.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+router.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
 
   const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
   
@@ -608,7 +664,7 @@ app.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
   
   
 // DELETE
-app.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+router.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
 
   const {id_pet, id_veterinario } = req.body;
   
@@ -635,4 +691,3 @@ app.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
 
 
 module.exports = router;
-
