@@ -14,7 +14,7 @@ router.get("/usuarios", async (req, res, next) => {
     res.status(200).json(ListaUsuarios.rows)
 
   } catch (error) {
-    
+    res.status().json({msg : ""})
   }
 })
 
@@ -25,7 +25,7 @@ router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(usuario.rows[0]);
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -36,42 +36,7 @@ router.post("/usuario", async (req, res, next) => {
     res.status(201).json(novoUsuario.rows[0]);
 
   } catch (error) {
-    
-  }
-  
-})
-
-router.get("/usuarios", async (req, res, next) => {
-  try {
-    const ListaUsuarios = await db.query("SELECT * FROM Usuarios");
-    res.status(200).json(ListaUsuarios.rows);
-
-  } catch (error) {
-    
-  }
-  
-
-})
-
-router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
-  const id = req.params.id;
-  try {
-    const usuario = await db.query("SELECT * FROM Usuarios WHERE id = $1", [id]);
-    res.status(200).json(usuario.rows[0]);
-
-  } catch (error) {
-    
-  }
-  
-
-router.post("/usuario", async (req, res, next) => {
-  const {nome, email, genero} = req.body;
-  try {
-    const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *",[nome, email, genero]);
-    res.status(201).json(novoUsuario.rows[0]);
-
-  } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -84,7 +49,7 @@ router.put("/usuario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(usuarioAtualizado.rows[0]);
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -96,7 +61,7 @@ router.delete("/usuario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json({mensagem: "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0] })
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -108,7 +73,7 @@ router.get("/pets", async (req, res, next) => {
     res.status(200).json(ListaPets.rows[0])
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 
 })
@@ -119,7 +84,7 @@ router.get("/pet/:id", IdChecagem, async (req, res, next) => {
     const Pet = await db.query("SELECT * FROM Pets WHERE id = $1", [id])
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -138,7 +103,7 @@ router.post("/pet", async (req, res, next) => {
     }
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
     
 
@@ -153,7 +118,7 @@ router.put("/pet/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(petAtualizado.rows[0]);
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -162,10 +127,10 @@ router.delete("/pet/:id", IdChecagem, async (req, res, next) => {
   const id = req.params.id;
   try {
     const petRemovido = await db.query("DELETE * FROM Pets WHERE id = $1", [id]);
-    res.status(200).json({msg : "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0]})
+    res.status(200).json({msg : "Pet removido com sucesso.", pet: petRemovido.rows[0]})
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -177,7 +142,7 @@ router.get("/produtos", async (req, res, next) => {
     res.status(200).json(ListaProdutos.rows)
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
   
 })
@@ -186,7 +151,7 @@ router.get("/produto/:id", IdChecagem, async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -194,7 +159,7 @@ router.post("/produto", async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -202,13 +167,14 @@ router.put("/produto/:id", IdChecagem, async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
 router.delete("produto/:id", IdChecagem, async (req, res, next) => {
   try {
-      
+      const produtoRemovido = await db;this.query("DELETE * FROM Produtos WHERE id = $1", [id])
+      res.status().json({msh : "", produtoRemovido})
     } catch (error) {
       
     }
@@ -221,7 +187,7 @@ router.get("/veterinarios", async (req, res, next) => {
     res.status(200).json(ListaVeterinarios.rows)
 
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -229,7 +195,7 @@ router.get("/veterinario/:id", IdChecagem, async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -237,7 +203,7 @@ router.post("/veterinario", async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -245,7 +211,7 @@ router.put("/veterinario/:id", IdChecagem, async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -253,7 +219,7 @@ router.delete("veterinario/:id", IdChecagem, async (req, res, next) => {
   try {
     
   } catch (error) {
-    
+    res.status().json({msg : ""})  
   }
 })
 
@@ -304,7 +270,7 @@ router.delete("veterinario/:id", IdChecagem, async (req, res, next) => {
 // CLIENTE - PET
 
 
-router.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+router.post("/Cliente_Pet", IdBodyChecagem, async (req, res, next) => {
 
   const {id_usuario, id_pet } = req.body;
 
@@ -330,7 +296,7 @@ router.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 
 // GET
-router.get("/Cliente_Pet", async (req, res) => {
+router.get("/Cliente_Pet", async (req, res, next) => {
 
   try {
 
@@ -352,7 +318,7 @@ router.get("/Cliente_Pet", async (req, res) => {
 
 
 // PUT
-router.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+router.put("/Cliente_Pet", IdBodyChecagem, async (req, res, next) => {
 
   const {id_usuario, id_pet, novo_id_usuario, novo_id_pet } = req.body;
 
@@ -378,7 +344,7 @@ router.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 
 // DELETE
-router.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+router.delete("/Cliente_Pet", IdBodyChecagem, async (req, res, next) => {
 
   const {id_usuario, id_pet } = req.body;
 
@@ -416,7 +382,7 @@ router.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
 // CLIENTE - PRODUTO
 
-router.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
+router.post("/Cliente_Produto", IdBodyChecagem , async (req, res, next) => {
 
   const {id_usuario, id_produto, quantidade, data_compra } = req.body;
 
@@ -442,7 +408,7 @@ router.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-router.get("/Cliente_Produto", async (req, res) => {
+router.get("/Cliente_Produto", async (req, res, next) => {
 
   try {
   
@@ -460,7 +426,7 @@ router.get("/Cliente_Produto", async (req, res) => {
   
   
 // PUT
-router.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
+router.put("/Cliente_Produto", IdBodyChecagem, async (req, res, next) => {
 
   const {id_usuario, id_produto, quantidade, data_compra } = req.body;
   
@@ -486,7 +452,7 @@ router.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
 
   
 // DELETE
-router.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
+router.delete("/Cliente_Produto", IdBodyChecagem, async (req, res, next) => {
   
   const {id_usuario, id_produto } = req.body;
   
@@ -518,7 +484,7 @@ router.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
 
 // CLIENTE - VET
 
-router.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
+router.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res, next) => {
 
   const {id_usuario, id_veterinario, data_consulta } = req.body;
 
@@ -552,7 +518,7 @@ router.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-router.get("/Cliente_Veterinario", async (req, res) => {
+router.get("/Cliente_Veterinario", async (req, res, next) => {
 
   try {
   
@@ -570,7 +536,7 @@ router.get("/Cliente_Veterinario", async (req, res) => {
   
   
 // PUT
-router.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
+router.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res, next) => {
   
   const {id_usuario, id_veterinario, data_consulta } = req.body;
 
@@ -596,7 +562,7 @@ router.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
   
   
 // DELETE
-router.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
+router.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res, next) => {
   
   const {id_usuario, id_veterinario } = req.body;
   
@@ -626,7 +592,7 @@ router.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
 
 // PET - VET 
 
-router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
+router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res, next) => {
 
   const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
 
@@ -672,7 +638,7 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
 
 // GET
-router.get("/Pet_Veterinario", async (req, res) => {
+router.get("/Pet_Veterinario", async (req, res, next) => {
 
   try {
   
@@ -690,7 +656,7 @@ router.get("/Pet_Veterinario", async (req, res) => {
   
   
 // PUT
-router.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+router.put("/Pet_Veterinario", IdBodyChecagem, async (req, res, next) => {
 
   const {id_pet, id_veterinario, data_atendimento, observacoes } = req.body;
   
@@ -724,7 +690,7 @@ router.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
   
   
 // DELETE
-router.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
+router.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res, next) => {
 
   const {id_pet, id_veterinario } = req.body;
   
