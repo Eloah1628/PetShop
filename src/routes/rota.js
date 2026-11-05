@@ -61,11 +61,13 @@ router.delete("/usuario/:id", IdChecagem, async (req, res, next) => {
 
 /*Rotas de Pets*/
 router.get("/pets", async (req, res, next) => {
-
+  const ListaPets = await db.query("SELECT * FROM Pets");
+  res.status(200).json(ListaPets.rows[0])
 })
 
 router.get("/pet/:id", IdChecagem, async (req, res, next) => {
-  
+  const id = req.params.id;
+  const Pet = await db.query("SELECT * FROM Pets WHERE id = $1", [id])
 })
 
 //Lista checada
@@ -186,7 +188,7 @@ router.delete("veterinario/:id", IdChecagem, async (req, res, next) => {
 // CLIENTE - PET
 
 
-app.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
+router.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
   const {id_usuario, id_pet } = req.body;
 
