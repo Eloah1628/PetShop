@@ -3,6 +3,8 @@ USE PetShopLuzzie;
 
 CREATE TABLE Usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(80) NOT NULL,
+    senha VARCHAR(20) NOT NULL,
     nome VARCHAR(80) NOT NULL,
     cpf CHAR(14) NOT NULL UNIQUE
 );
