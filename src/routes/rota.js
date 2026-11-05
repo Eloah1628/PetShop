@@ -1,7 +1,14 @@
 const express = require("express");
+
 const router = express.Router();
+
 const db = require("../db");
+
 const {IdChecagem, IdBodyChecagem} = require('../middlewares/Checagens.js');
+
+const bcrypt = require("bcrypt");
+
+const jwt = require("jsonwebtoken");
 
 router.get("/", (req, res) => {
   res.status(200).json({msg: "Bem vindo ao express_template_docker!!!"});
@@ -203,9 +210,18 @@ router.post("/produto", async (req, res, next) => {
   const {nome, descricao, preco, quantidade} = req.body;
 
   try {
-    const novoProduto = await db.query("INSERT INTO Produtos(nome, descricao, preco, quantidade) VALUES($1, $2, $3, $4) RETURNING *", [nome, descricao, preco, quantidade]);
 
-    res.status(201).json(novoProduto.rows[0]);
+    if (preco > 0) {
+      if (quantidade > 0) {
+        const novoProduto = await db.query("INSERT INTO Produtos(nome, descricao, preco, quantidade) VALUES($1, $2, $3, $4) RETURNING *", [nome, descricao, preco, quantidade]);
+
+        res.status(201).json(novoProduto.rows[0]);
+      } else {
+        res.status().json({msg : "Quantidade inválida"})
+      }
+    } else {
+      res.status().json({msg : "Preço inválido"})
+    }
 
   } catch (error) {
     res.status(500).json({msg : "Erro ao cadastrar produto."})
@@ -341,33 +357,6 @@ router.delete("/veterinario/:id", IdChecagem, async (req, res, next) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // CLIENTE - PET
 
 
@@ -470,17 +459,6 @@ router.delete("/Cliente_Pet", IdBodyChecagem, async (req, res, next) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
 // CLIENTE - PRODUTO
 
 router.post("/Cliente_Produto", IdBodyChecagem , async (req, res, next) => {
@@ -578,10 +556,6 @@ router.delete("/Cliente_Produto", IdBodyChecagem, async (req, res, next) => {
 });
   
   
-
-
-
-
 
 // CLIENTE - VET
 
@@ -686,9 +660,6 @@ router.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res, next) => 
   }
   
 });
-
-
-
 
 
 // PET - VET 
@@ -814,6 +785,82 @@ router.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res, next) => {
   }
 
 });
+
+
+
+/* 
+
+// LOGIN
+
+router.post("/login", async (req, res) => {
+
+  const { email, senha } = req.body;
+
+  try {
+
+    if (!email || !senha) {
+      return res.status(400).json({ msg: "Informe o email e a senha." });
+    }
+
+    const resultado = await db.query(
+
+      "SELECT * FROM Usuarios WHERE email = $1", [email] );
+
+    if (resultado.rows.length === 0) {
+
+      return res.status(401).json({ msg: "Email ou senha incorretos."});
+
+    }
+
+    const usuario = resultado.rows[0];
+
+    const senhaCorreta = await bcrypt.compare(
+      senha,
+      usuario.senha
+    );
+
+    if (!senhaCorreta) {
+
+      return res.status(401).json({msg: "Email ou senha incorretos."});
+
+    }
+
+    const token = jwt.sign(
+
+        { id_usuario: usuario.id },
+
+        process.env.JWT_SECRET,
+
+        { expiresIn: "1h" }
+
+    );
+
+    res.status(200).json({
+
+      msg: "Login realizado com sucesso!",
+
+      token: token,
+
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email
+      }
+
+    });
+
+} catch (error) {
+
+  console.error(error);
+
+  res.status(500).json({ msg: "Não foi possível realizar o login."});
+
+}
+
+});
+
+*/
+
 
 
 
