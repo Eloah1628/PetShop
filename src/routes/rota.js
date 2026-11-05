@@ -21,7 +21,7 @@ router.get("/usuarios", async (req, res, next) => {
     res.status(200).json(ListaUsuarios.rows)
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar usuários."})
+    return res.status(500).json({msg : "Erro ao buscar usuários."})
   }
 })
 
@@ -37,20 +37,57 @@ router.get("/usuario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(usuario.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar usuário."})
+    return res.status(500).json({msg : "Erro ao buscar usuário."})
   }
 })
 
 router.post("/usuario", async (req, res, next) => {
-  const {nome, email, genero} = req.body
+  const {nome, email, senha, cpf} = req.body
+  const senhaHash = await bcrypt.hash(senha, 10);
+  await db.query("INSERT INTO Usuarios(nome, email, senha, cpf) VALUES($1, $2, $3, $4)", [nome, email, senhaHash, cpf]);
+
   try {
-    const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, genero]);
+    const novoUsuario = await db.query("INSERT INTO Usuarios(nome, email, genero) VALUES($1, $2, $3) RETURNING *", [nome, email, senha, cpf]);
     res.status(201).json(novoUsuario.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao cadastrar usuário."})
+    return res.status(500).json({msg : "Erro ao cadastrar usuário."})
   }
+})
+
+router.post("/usuario/login", async (req, res, next) => {
+  const {email, senha} = req.body;
+  try {
+    if (!email || !senha) {
+      return res.status(400).json({ msg: "Informe o email e a senha." });
+    }
+    const resultado = await db.query("SELECT * FROM Usuarios WHERE email = $1", [email]);
+
+    if (resultado.rows.length === 0) {
+      return res.status(401).json({ msg: "Email ou senha incorretos."});
+    }
+
+    const usuario = resultado.rows[0];
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaCorreta) {
+      return res.status(401).json({msg: "Email ou senha incorretos."});
+    }
+
+    const token = jwt.sign(
+        { id_usuario: usuario.id },
+        process.env.JWT_SECRET,
+        { expiresIn: "3h" }
+    );
+
+    res.status(200).json({msg: "Login realizado com sucesso!", token: token, usuario: {id: usuario.id, nome: usuario.nome, email: usuario.email}
+    });
   
+  } catch (error) {
+    console.error(error);
+  
+    res.status(500).json({ msg: "Não foi possível realizar o login."});
+  
+  }
 })
 
 router.put("/usuario/:id", IdChecagem, async (req, res, next) => {
@@ -66,7 +103,7 @@ router.put("/usuario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(usuarioAtualizado.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao atualizar usuário."})
+    return res.status(500).json({msg : "Erro ao atualizar usuário."})
   }
   
 })
@@ -83,7 +120,7 @@ router.delete("/usuario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json({mensagem: "Usuário removido com sucesso.", usuario: usuarioRemovido.rows[0] })
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao remover usuário."})
+    return res.status(500).json({msg : "Erro ao remover usuário."})
   }
   
 })
@@ -95,7 +132,7 @@ router.get("/pets", async (req, res, next) => {
     res.status(200).json(ListaPets.rows)
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar pets."})
+    return res.status(500).json({msg : "Erro ao buscar pets."})
   }
 
 })
@@ -112,7 +149,7 @@ router.get("/pet/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(Pet.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar pet."})
+    return res.status(500).json({msg : "Erro ao buscar pet."})
   }
   
 })
@@ -131,7 +168,7 @@ router.post("/pet", async (req, res, next) => {
     res.status(201).json(novoPet.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao cadastrar pet."})
+    return res.status(500).json({msg : "Erro ao cadastrar pet."})
   }
     
 
@@ -156,7 +193,7 @@ router.put("/pet/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(petAtualizado.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao atualizar pet."})
+    return res.status(500).json({msg : "Erro ao atualizar pet."})
   }
   
 })
@@ -173,7 +210,7 @@ router.delete("/pet/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json({msg : "Pet removido com sucesso.", pet: petRemovido.rows[0]})
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao remover pet."})
+    return res.status(500).json({msg : "Erro ao remover pet."})
   }
   
 })
@@ -185,7 +222,7 @@ router.get("/produtos", async (req, res, next) => {
     res.status(200).json(ListaProdutos.rows)
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar produtos."})
+    return res.status(500).json({msg : "Erro ao buscar produtos."})
   }
   
 })
@@ -202,7 +239,7 @@ router.get("/produto/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(produto.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar produto."})
+    return res.status(500).json({msg : "Erro ao buscar produto."})
   }
 })
 
@@ -224,7 +261,7 @@ router.post("/produto", async (req, res, next) => {
     }
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao cadastrar produto."})
+    return res.status(500).json({msg : "Erro ao cadastrar produto."})
   }
 })
 
@@ -242,7 +279,7 @@ router.put("/produto/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(produtoAtualizado.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao atualizar produto."})
+    return res.status(500).json({msg : "Erro ao atualizar produto."})
   }
 })
 
@@ -259,7 +296,7 @@ router.delete("/produto/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json({msg : "Produto removido com sucesso!", produto : produtoRemovido.rows[0]})
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao remover produto."})
+    return res.status(500).json({msg : "Erro ao remover produto."})
   }
 })
 
@@ -270,7 +307,7 @@ router.get("/veterinarios", async (req, res, next) => {
     res.status(200).json(ListaVeterinarios.rows)
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar veterinários."})
+    return res.status(500).json({msg : "Erro ao buscar veterinários."})
   }
 })
 
@@ -287,7 +324,7 @@ router.get("/veterinario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(veterinario.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao buscar veterinário."})
+    return res.status(500).json({msg : "Erro ao buscar veterinário."})
   }
 })
 
@@ -300,7 +337,7 @@ router.post("/veterinario", async (req, res, next) => {
     res.status(201).json(novoVeterinario.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao cadastrar veterinário."})
+    return res.status(500).json({msg : "Erro ao cadastrar veterinário."})
   }
 })
 
@@ -318,7 +355,7 @@ router.put("/veterinario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json(veterinarioAtualizado.rows[0]);
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao atualizar veterinário."})
+    return res.status(500).json({msg : "Erro ao atualizar veterinário."})
   }
 })
 
@@ -335,7 +372,7 @@ router.delete("/veterinario/:id", IdChecagem, async (req, res, next) => {
     res.status(200).json({msg : "Veterinário removido com sucesso.", veterinario : veterinarioRemovido.rows[0]});
 
   } catch (error) {
-    res.status(500).json({msg : "Erro ao remover veterinário."})
+    return res.status(500).json({msg : "Erro ao remover veterinário."})
   }
 })
 
@@ -785,82 +822,6 @@ router.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res, next) => {
   }
 
 });
-
-
-
-/* 
-
-// LOGIN
-
-router.post("/login", async (req, res) => {
-
-  const { email, senha } = req.body;
-
-  try {
-
-    if (!email || !senha) {
-      return res.status(400).json({ msg: "Informe o email e a senha." });
-    }
-
-    const resultado = await db.query(
-
-      "SELECT * FROM Usuarios WHERE email = $1", [email] );
-
-    if (resultado.rows.length === 0) {
-
-      return res.status(401).json({ msg: "Email ou senha incorretos."});
-
-    }
-
-    const usuario = resultado.rows[0];
-
-    const senhaCorreta = await bcrypt.compare(
-      senha,
-      usuario.senha
-    );
-
-    if (!senhaCorreta) {
-
-      return res.status(401).json({msg: "Email ou senha incorretos."});
-
-    }
-
-    const token = jwt.sign(
-
-        { id_usuario: usuario.id },
-
-        process.env.JWT_SECRET,
-
-        { expiresIn: "1h" }
-
-    );
-
-    res.status(200).json({
-
-      msg: "Login realizado com sucesso!",
-
-      token: token,
-
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email
-      }
-
-    });
-
-} catch (error) {
-
-  console.error(error);
-
-  res.status(500).json({ msg: "Não foi possível realizar o login."});
-
-}
-
-});
-
-*/
-
 
 
 
