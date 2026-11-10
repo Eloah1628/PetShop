@@ -19,7 +19,7 @@ router.get("/usuarios", async (req, res) => {
 
       res.status(200).json(ListaUsuarios.rows);
 
-} catch (error) {
+  } catch (error) {
       console.error(error);
       res.status(500).json({msg : "Erro ao buscar usuários."});
 }
@@ -37,7 +37,7 @@ router.get("/usuario/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json(usuario.rows[0]);
 
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({msg : "Erro ao buscar usuário."});
 }
@@ -52,16 +52,16 @@ router.post("/usuario", async (req, res) => {
   }
 
     const senhaHash = await bcrypt.hash(senha, 10);
-    const resultado = await db.query(
+    const UsuarioInscrito = await db.query(
       `INSERT INTO Usuarios (nome, email, senha, cpf)
        VALUES ($1, $2, $3, $4)
        RETURNING id, nome, email, cpf`,
       [nome, email, senhaHash, cpf]
     );
 
-    res.status(201).json(resultado.rows[0]);
+    res.status(201).json(UsuarioInscrito.rows[0]);
 
-} catch (error) {
+  } catch (error) {
       console.error(error);
 
       if (error.code === "23505") {
@@ -98,16 +98,15 @@ router.post("/usuario/login", async (req, res) => {
       {expiresIn: "3h"}
     );
 
-    res.status(200).json({
-      msg : "Login realizado com sucesso!",
+    res.status(200).json({msg : "Login realizado com sucesso!",
       token,
       usuario: {
-          id: usuario.id,
-          nome: usuario.nome,
-          email: usuario.email
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email
       }
   });
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({msg : "Não foi possível realizar o login."});
 }
@@ -132,12 +131,10 @@ router.put("/usuario/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json(UsuarioAtualizado.rows[0]);
 
-} catch (error) {
+  } catch (error) {
       console.error(error);
-      res.status(500).json({
-          msg : "Erro ao atualizar usuário."
-    });
-}
+      res.status(500).json({msg : "Erro ao atualizar usuário;"});
+  }
 });
 
 router.delete("/usuario/:id", IdChecagem, async (req, res) => {
@@ -157,7 +154,7 @@ router.delete("/usuario/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json({msg : "Usuário removido com sucesso.", usuario: UsuarioRemovido.rows[0]});
 
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({msg : "Erro ao remover usuário."});
 }
@@ -169,7 +166,7 @@ router.get("/pets", async (req, res) => {
     const ListaPets = await db.query("SELECT * FROM Pets");
     res.status(200).json(ListaPets.rows[0])
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao buscar pets."})
 }
 
@@ -186,7 +183,7 @@ router.get("/pet/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json(Pet.rows[0]);
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao buscar pet."})
 }
   
@@ -205,7 +202,7 @@ router.post("/pet", async (req, res) => {
     const novoPet = await db.query("INSERT INTO Pets(nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES($1, $2, $3, $4, $5, $6) RETURNING *", [nome, idade, sexo, descricao, historico_vet, estado_atual]);
     res.status(201).json(novoPet.rows[0]);
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao cadastrar pet."})
 }
     
@@ -230,7 +227,7 @@ router.put("/pet/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json(petAtualizado.rows[0]);
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao atualizar pet."})
 }
   
@@ -247,7 +244,7 @@ router.delete("/pet/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json({msg : "Pet removido com sucesso.", pet: petRemovido.rows[0]})
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao remover pet."})
 }
   
@@ -257,86 +254,105 @@ router.delete("/pet/:id", IdChecagem, async (req, res) => {
 router.get("/produtos", async (req, res) => {
   try {
     const ListaProdutos = await db.query("SELECT * FROM Produtos");
-    res.status(200).json(ListaProdutos.rows[0])
+    res.status(200).json(ListaProdutos.rows)
 
-} catch (error) {
-    return res.status(500).json({msg : "Erro ao buscar produtos."})
-}
-  
-})
+    } catch (error) {
+    console.error(error);
+    res.status(500).json({msg : "Erro ao buscar produtos."});
+  }
+});
 
 router.get("/produto/:id", IdChecagem, async (req, res) => {
-  const id = req.params.id;
   try {
-    const produto = await db.query("SELECT * FROM Produtos WHERE id = $1", [id]);
+    const {id} = req.params;
 
-    if (produto.rows.length === 0) {
+    const Produto = await db.query("SELECT * FROM Produtos WHERE id = $1",[id]);
+
+    if (Produto.rows.length === 0) {
       return res.status(404).json({msg : "Produto não encontrado."});
+    }
+
+    res.status(200).json(Produto.rows[0]);
+
+    } catch (error) {
+    console.error(error);
+    res.status(500).json({msg : "Erro ao buscar produto."});
   }
-
-    res.status(200).json(produto.rows[0]);
-
-} catch (error) {
-    return res.status(500).json({msg : "Erro ao buscar produto."})
-}
-})
+});
 
 router.post("/produto", async (req, res) => {
-  const {nome, descricao, preco, quantidade} = req.body;
+  const {nome, descricao, preco, quant_estoque} = req.body;
 
   try {
-
-    if (preco > 0) {
-      if (quantidade > 0) {
-        const novoProduto = await db.query("INSERT INTO Produtos(nome, descricao, preco, quantidade) VALUES($1, $2, $3, $4) RETURNING *", [nome, descricao, preco, quantidade]);
-
-        res.status(201).json(novoProduto.rows[0]);
-    } else {
-        res.status().json({msg : "Quantidade inválida"})
+    if (!nome || !descricao || typeof preco !== "number" ||
+      !Number.isFinite(preco) || preco <= 0 ||
+      !Number.isInteger(quant_estoque) || quant_estoque <= 0
+    ) {
+      return res.status(400).json({msg: "Dados do produto inválidos."});
     }
-  } else {
-      res.status().json({msg : "Preço inválido"})
-  }
 
-} catch (error) {
-    return res.status(500).json({msg : "Erro ao cadastrar produto."})
-}
-})
+    const ProdutoCadastrado = await db.query(
+      `INSERT INTO Produtos
+       (nome, descricao, preco, quant_estoque)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [nome, descricao, preco, quant_estoque]
+  );
+
+    res.status(201).json(ProdutoCadastrado.rows[0]);
+    } catch (error) {
+    console.error(error);
+    res.status(500).json({msg : "Erro ao cadastrar produto."});
+  }
+});
 
 router.put("/produto/:id", IdChecagem, async (req, res) => {
-  const id = req.params.id;
-  const {nome, descricao, preco, quantidade} = req.body;
+  const {id} = req.params;
+  const {nome, descricao, preco, quant_estoque} = req.body;
 
   try {
-    const produtoAtualizado = await db.query("UPDATE Produtos SET nome = $1, descricao = $2, preco = $3, quantidade = $4 WHERE id = $5 RETURNING *", [nome, descricao, preco, quantidade, id]);
+  if (!nome || !descricao || preco <= 0 ||
+    !Number.isInteger(quant_estoque) || quant_estoque <= 0) {
 
-    if (produtoAtualizado.rows.length === 0) {
-      return res.status(404).json({msg : "Produto não encontrado."});
+    return res.status(400).json({msg : "Dados do produto inválidos."});
   }
 
-    res.status(200).json(produtoAtualizado.rows[0]);
+  const ProdutoEditado = await db.query(
+    `UPDATE Produtos
+     SET nome = $1, descricao = $2, preco = $3, quant_estoque = $4 WHERE id = $5
+     RETURNING *`,
+    [nome, descricao, preco, quant_estoque, id]
+  );
 
-} catch (error) {
-    return res.status(500).json({msg : "Erro ao atualizar produto."})
-}
-})
+  if (ProdutoEditado.rows.length === 0) {
+    return res.status(404).json({msg : "Produto não encontrado."});
+  }
+
+  res.status(200).json(ProdutoEditado.rows[0]);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({msg : "Erro ao atualizar produto."});
+  }
+});
 
 router.delete("/produto/:id", IdChecagem, async (req, res) => {
-  const id = req.params.id;
-
   try {
-    const produtoRemovido = await db.query("DELETE FROM Produtos WHERE id = $1 RETURNING *", [id]);
+    const {id} = req.params;
 
-    if (produtoRemovido.rows.length === 0) {
+    const ProdutoRemovido = await db.query("DELETE FROM Produtos WHERE id = $1 RETURNING *", [id]);
+
+    if (ProdutoRemovido.rows.length === 0) {
       return res.status(404).json({msg : "Produto não encontrado."});
-  }
+    }
 
-    res.status(200).json({msg : "Produto removido com sucesso!", produto : produtoRemovido.rows[0]})
+    res.status(200).json({msg : "Produto removido com sucesso!", produto: ProdutoRemovido.rows[0]});
 
-} catch (error) {
-    return res.status(500).json({msg : "Erro ao remover produto."})
+    } catch (error) {
+    console.error(error);
+    res.status(500).json({msg : "Erro ao remover produto."});
 }
-})
+});
 
 /*Rotas de Veterinarios*/
 router.get("/veterinarios", async (req, res) => {
@@ -344,9 +360,9 @@ router.get("/veterinarios", async (req, res) => {
     const ListaVeterinarios = await db.query("SELECT * FROM Veterinarios");
     res.status(200).json(ListaVeterinarios.rows[0])
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao buscar veterinários."})
-}
+  }
 })
 
 router.get("/veterinario/:id", IdChecagem, async (req, res) => {
@@ -357,13 +373,13 @@ router.get("/veterinario/:id", IdChecagem, async (req, res) => {
 
     if (veterinario.rows.length === 0) {
       return res.status(404).json({msg : "Veterinário não encontrado."});
-  }
+    }
 
     res.status(200).json(veterinario.rows[0]);
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao buscar veterinário."})
-}
+  }
 })
 
 router.post("/veterinario", async (req, res) => {
@@ -374,9 +390,9 @@ router.post("/veterinario", async (req, res) => {
 
     res.status(201).json(novoVeterinario.rows[0]);
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao cadastrar veterinário."})
-}
+  }
 })
 
 router.put("/veterinario/:id", IdChecagem, async (req, res) => {
@@ -388,13 +404,12 @@ router.put("/veterinario/:id", IdChecagem, async (req, res) => {
 
     if (veterinarioAtualizado.rows.length === 0) {
       return res.status(404).json({msg : "Veterinário não encontrado."});
-  }
+    }
 
     res.status(200).json(veterinarioAtualizado.rows[0]);
-
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao atualizar veterinário."})
-}
+  }
 })
 
 router.delete("/veterinario/:id", IdChecagem, async (req, res) => {
@@ -409,9 +424,9 @@ router.delete("/veterinario/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json({msg : "Veterinário removido com sucesso.", veterinario : veterinarioRemovido.rows[0]});
 
-} catch (error) {
+  } catch (error) {
     return res.status(500).json({msg : "Erro ao remover veterinário."})
-}
+  }
 })
 
 
@@ -451,7 +466,7 @@ router.post("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
     res.status(201).json({msg : "Pet cadastrado ao cliente com sucesso!"});
 
-} catch (error) {
+  } catch (error) {
 
     res.status(400).json({msg : "Não foi possível cadastrar o pet ao cliente, tente novamente"});
     
@@ -473,7 +488,7 @@ router.get("/Cliente_Pet", async (req, res) => {
 
     res.status(200).json(resultado.rows[0]);
 
-} catch (error) {
+  } catch (error) {
 
     res.status(400).json({msg : "Não foi possível buscar os pets dos clientes."});
 
@@ -497,7 +512,7 @@ router.get("/Cliente_Pet/:id", IdChecagem, async (req, res) => {
 
     res.status(200).json(resultado.rows[0]);
 
-} catch (error) {
+  } catch (error) {
 
     res.status(400).json({msg : "Não foi possível buscar os pets dos clientes."});
 
@@ -523,7 +538,7 @@ router.put("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
     res.status(200).json({msg : "Cadastro do pet ao cliente atualizado com sucesso!"});
 
-} catch (error) {
+  } catch (error) {
 
     res.status(400).json({msg : "Não foi possível atualizar o cadastro do pet ao cliente."});
 
@@ -549,7 +564,7 @@ router.delete("/Cliente_Pet", IdBodyChecagem, async (req, res) => {
 
     res.status(200).json({msg : "Pet removido do cliente com sucesso!"});
 
-} catch (error) {
+  } catch (error) {
 
     res.status(400).json({msg : "Não foi possível remover o pet do cliente."});
 
@@ -576,7 +591,7 @@ router.post("/Cliente_Produto", IdBodyChecagem , async (req, res) => {
 
     res.status(201).json({msg : "Compra feita com sucesso!"});
 
-  } catch (error) {
+    } catch (error) {
 
     res.status(400).json({msg : "Não foi possível registrar a compra."});
 
@@ -594,11 +609,11 @@ router.get("/Cliente_Produto", async (req, res) => {
     
     res.status(200).json(resultado.rows[0]);
     
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível buscar as compras dos clientes."});
     
-}
+  }
   
 });
   
@@ -613,11 +628,11 @@ router.get("/Cliente_Produto/:id", IdChecagem, async (req, res) => {
     
     res.status(200).json(resultado.rows[0]);
     
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível buscar as compras dos clientes."});
     
-}
+  }
   
 });
 
@@ -639,7 +654,7 @@ router.put("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
   
     res.status(200).json({msg : "Compra atualizada com sucesso!"});
   
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível atualizar a compra."});
   
@@ -665,11 +680,11 @@ router.delete("/Cliente_Produto", IdBodyChecagem, async (req, res) => {
   
     res.status(200).json({msg : "Compra removida com sucesso!"});
   
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível remover a compra."});
   
-}
+  }
   
 });
   
@@ -693,15 +708,12 @@ router.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 
       res.status(201).json({
 
-        msg : "Consulta marcada com sucesso!"
+         : "Consulta marcada com sucesso});
 
-    });
-
-  } catch (error) {
+    } catch (error) {
 
     res.status(400).json({
-
-      msg : "Não foi possível cadastrar a consulta."
+msg : "Não foi possível cadastrar a consulta."
 
   });
 
@@ -719,11 +731,11 @@ router.get("/Cliente_Veterinario", async (req, res) => {
     
     res.status(200).json(resultado.rows[0]);
   
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível buscar as consultas dos clientes."});
     
-}
+  }
   
 });
 
@@ -738,11 +750,11 @@ router.get("/Cliente_Veterinario/:id", IdChecagem, async (req, res) => {
     
     res.status(200).json(resultado.rows[0]);
   
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível buscar as consultas dos clientes."});
     
-}
+  }
   
 });
   
@@ -764,7 +776,7 @@ router.put("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
     
     res.status(200).json({msg : "Consulta atualizada com sucesso!"});
   
-} catch (error) {
+  } catch (error) {
   
   res.status(400).json({msg : "Não foi possível atualizar a consulta."});
   
@@ -790,11 +802,11 @@ router.delete("/Cliente_Veterinario", IdBodyChecagem, async (req, res) => {
   
     res.status(200).json({msg : "Consulta removida com sucesso!"});
   
-} catch (error) {
+  } catch (error) {
   
   res.status(400).json({msg : "Não foi possível remover a consulta."});
   
-}
+  }
   
 });
 
@@ -811,9 +823,7 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       return res.status(400).json({
 
-        msg : "As observações devem ter no máximo 200 caracteres."
-
-    });
+         : "As observações devem ter no máximo 200 caracteres});
       
   } else {
 
@@ -827,19 +837,15 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       res.status(201).json({
 
-        msg : "Atendimento veterinário cadastrado com sucesso!"
-
-    });
+         : "Atendimento veterinário cadastrado com sucesso});
 
   }
 
-} catch (error) {
+  } catch (error) {
 
       res.status(400).json({
 
-        msg : "Não foi possível cadastrar o atendimento veterinário."
-
-    });
+         : "Não foi possível cadastrar o atendimento veterinário});
 
 }
 
@@ -855,11 +861,11 @@ router.get("/Pet_Veterinario", async (req, res) => {
     
     res.status(200).json(resultado.rows[0]);
   
-} catch (error) {
+  } catch (error) {
   
    res.status(400).json({msg : "Não foi possível buscar os atendimentos veterinários."});
   
-}
+  }
   
 });
 
@@ -873,11 +879,11 @@ router.get("/Pet_Veterinario", async (req, res) => {
     
     res.status(200).json(resultado.rows[0]);
   
-} catch (error) {
+  } catch (error) {
   
    res.status(400).json({msg : "Não foi possível buscar os atendimentos veterinários."});
   
-}
+  }
   
 });
   
@@ -907,11 +913,11 @@ router.put("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
     
   }
   
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível atualizar o atendimento veterinário."});
   
-}
+  }
   
 });
   
@@ -933,7 +939,7 @@ router.delete("/Pet_Veterinario", IdBodyChecagem, async (req, res) => {
   
     res.status(200).json({msg : "Atendimento veterinário removido com sucesso!"});
 
-} catch (error) {
+  } catch (error) {
   
     res.status(400).json({msg : "Não foi possível remover o atendimento veterinário."});
   
