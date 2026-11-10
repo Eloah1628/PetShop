@@ -708,7 +708,8 @@ router.post("/Cliente_Veterinario", IdBodyChecagem , async (req, res) => {
 
       res.status(201).json({
 
-         : "Consulta marcada com sucesso});
+        msg : "Consulta marcada com sucesso!"
+});
 
     } catch (error) {
 
@@ -823,7 +824,8 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       return res.status(400).json({
 
-         : "As observações devem ter no máximo 200 caracteres});
+        msg : "As observações devem ter no máximo 200 caracteres."
+});
       
   } else {
 
@@ -837,7 +839,8 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       res.status(201).json({
 
-         : "Atendimento veterinário cadastrado com sucesso});
+        msg : "Atendimento veterinário cadastrado com sucesso!"
+});
 
   }
 
@@ -845,7 +848,8 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       res.status(400).json({
 
-         : "Não foi possível cadastrar o atendimento veterinário});
+        msg : "Não foi possível cadastrar o atendimento veterinário."
+});
 
 }
 
