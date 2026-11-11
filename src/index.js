@@ -8,6 +8,8 @@ app.use(cors());
 
 app.use("/hello", require("./routes/rota"));
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
 });
