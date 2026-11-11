@@ -23,7 +23,7 @@ CREATE TABLE Produtos (
     nome VARCHAR(40) NOT NULL,
     preco DECIMAL(10,2) NOT NULL CHECK (preco > 0),
     descricao VARCHAR(60) NOT NULL,
-    quant_estoque INT NOT NULL CHECK (quant_estoque > 0)
+    quant_estoque INT NOT NULL DEFAULT 0 CHECK (quant_estoque >= 0)
 );
 
 CREATE TABLE Veterinarios (
@@ -85,15 +85,15 @@ CREATE TABLE Pet_Veterinario (
 ALTER TABLE Usuarios ALTER COLUMN senha TYPE VARCHAR(255);
 ALTER TABLE Usuarios ADD CONSTRAINT unique_email UNIQUE (email);
 
-/*Alteração de Produtos*/
-ALTER TABLE Produtos ALTER COLUMN quant_estoque SET DEFAULT 0;
-ALTER TABLE Produtos DROP CONSTRAINT checar_estoque;
-ALTER TABLE Produtos ADD CONSTRAINT checar_estoque CHECK (quant_estoque >= 0);
+/*Alteração para adição de fotos*/
+ALTER TABLE Usuarios ADD COLUMN IF NOT EXISTS foto_url TEXT;
+ALTER TABLE Pets ADD COLUMN IF NOT EXISTS foto_url TEXT;
+ALTER TABLE Produtos ADD COLUMN IF NOT EXISTS foto_url TEXT;
 
 /*Insert's*/
-INSERT INTO Usuarios (nome, cpf) VALUES ('Ana Silva', 'AnaSilva1230@gmail.com', 'JKMyIdol666','123.456.789-01');
-INSERT INTO Usuarios (nome, cpf) VALUES ('Bruno Santos','BrunoSants@hotmail.com', 'S4llem360', '234.567.890-12');
-INSERT INTO Usuarios (nome, cpf) VALUES ('Carla Oliveira', 'CarlaOliva@gmail.com', 'Iogurt3T0rradas','345.678.901-23');
+INSERT INTO Usuarios (nome, email, senha, cpf) VALUES ('Ana Silva', 'AnaSilva1230@gmail.com', 'JKMyIdol666','123.456.789-01');
+INSERT INTO Usuarios (nome, email, senha, cpf) VALUES ('Bruno Santos','BrunoSants@hotmail.com', 'S4llem360', '234.567.890-12');
+INSERT INTO Usuarios (nome, email, senha, cpf) VALUES ('Carla Oliveira', 'CarlaOliva@gmail.com', 'Iogurt3T0rradas','345.678.901-23');
 
 INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Rex', 5, 'M', 'Cachorro da raca Labrador', 'Vacinado e castrado', 'Saudavel');
 INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES ('Luna', 3, 'F', 'Gata da raca Siames', 'Tratamento contra pulgas', 'Saudavel');
