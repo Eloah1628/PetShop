@@ -202,7 +202,6 @@ router.post("/pet/:id/foto", IdChecagem, async (req, res) => {
 
     res.status(200).json(petAtualizado.rows[0]);
   } catch (error) {
-    console.error(error);
     res.status(500).json({msg : "Erro ao adicionar a foto." });
   }
 });
@@ -268,7 +267,29 @@ router.delete("/pet/:id", IdChecagem, async (req, res) => {
   } catch (error) {
     return res.status(500).json({msg : "Erro ao remover pet."})
   }
-})
+});
+
+router.post("/pet/:id/foto", IdChecagem, async (req, res) => {
+  try {
+    const {id} = req.params;
+    const {foto_url} = req.body;
+
+    if (!foto_url || !LinkFotoValido(foto_url)) {
+      return res.status(400).json({msg : "Link de foto inválido."});
+    }
+
+    const petAtualizado = await db.query("UPDATE Pets SET foto_url = $1 WHERE id = $2 RETURNING *",[foto_url, id]);
+
+    if (petAtualizado.rows.length === 0) {
+      return res.status(404).json({msg : "Pet não encontrado."});
+    }
+
+    res.status(200).json(petAtualizado.rows[0]);
+
+  } catch (error) {
+    res.status(500).json({msg : "Erro ao adicionar a foto."});
+  }
+});
 
 /*Rotas de Produtos*/
 router.get("/produtos", async (req, res) => {
@@ -332,7 +353,6 @@ router.post("/produto/:id/foto", IdChecagem, async (req, res) => {
 
     res.status(200).json(produtoAtualizado.rows[0]);
   } catch (error) {
-    console.error(error);
     res.status(500).json({msg : "Erro ao adicionar a foto." });
   }
 });
