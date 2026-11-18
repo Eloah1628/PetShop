@@ -1,47 +1,38 @@
 const IdChecagem = (req, res, next) => {
-    const id = req.params;
 
-    if (!id || isNaN(Number(id))) {
-        return res.status(400).json({msg : "Id Inválido"});
-    } else if (id <= 0) {
-        return res.status(400).json({msg : "Número de Id Inválido"})
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({ msg: "Id inválido."});
     }
 
     next();
 };
-
 
 
 const IdBodyChecagem = (req, res, next) => {
 
-    const id = req.body.id;
+    const camposId = Object.keys(req.body).filter(campo =>
+        campo.startsWith("id_") || campo.startsWith("novo_id_")
+    );
 
-    if (!id || isNaN(Number(id))) {
+    if (camposId.length < 2) {
+        return res.status(400).json({msg: "Informe os identificadores necessários."});
+    }
 
-        return res.status(400).json({msg : "Id Inválido"});
+    for (const campo of camposId) {
 
-    } else if (Number(id) <= 0) {
+        const valor = Number(req.body[campo]);
 
-        return res.status(400).json({msg : "Número de Id Inválido"});
-
-    } else {
-
-        const {id_usuario, id_veterinario, data_consulta} = req.body;
-
-        if (!Number.isInteger(Number(id_usuario)) || Number(id_usuario) <= 0 || !Number.isInteger(Number(id_veterinario)) || Number(id_veterinario) <= 0 || !data_consulta) {
-
+        if (!Number.isInteger(valor) || valor <= 0) {
             return res.status(400).json({
-
-                msg: "Informe novamente o ID do usuário, o ID do veterinário e a data da consulta."
-
+                msg: `O campo ${campo} possui um ID inválido.`
             });
-
         }
-
     }
 
     next();
-
 };
-    
-module.exports = {IdChecagem, IdBodyChecagem};
+
+
+module.exports = { IdChecagem, IdBodyChecagem };
