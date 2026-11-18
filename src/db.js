@@ -8,10 +8,8 @@ const pool = new Pool({
   port: process.env.DB_PORT || 5432,
 });
 
-// Função usada para operações ACID simples
 const query = (text, params) => pool.query(text, params);
 
-// Função usada para realizar operações com transações.
 async function transaction(operar) {
   const conexao = await pool.connect();
   try {
@@ -20,7 +18,11 @@ async function transaction(operar) {
     await conexao.query('COMMIT');
     return result;
   } catch (err) {
-    await conexao.query('ROLLBACK');
+    try {
+      await conexao.query('ROLLBACK');
+    } catch (erroRollback) {
+      console.error("Erro ao realizar ROLLBACK:", erroRollback);
+    }
     throw err;
   } finally {
     conexao.release();
