@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
 
-const pastaUploads = path.join(__dirname, "..", "uploads");
+const pastaUploads = path.join(__dirname, "..", "..", "upload");
 
 fs.mkdirSync(pastaUploads, { recursive: true });
 
@@ -20,7 +20,8 @@ const armazenamento = multer.diskStorage({
     },
 
     filename: (req, file, cb) => {
-        const nomeArquivo = crypto.randomUUID() + extensoes[file.mimetype];
+        const extensao = extensoes[file.mimetype];
+        const nomeArquivo = crypto.randomUUID() + extensao;
 
         cb(null, nomeArquivo);
     }
