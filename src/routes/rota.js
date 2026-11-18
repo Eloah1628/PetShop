@@ -837,12 +837,9 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
     if (observacoes && observacoes.length > 200) {
 
-      return res.status(400).json({
-
-        msg : "As observações devem ter no máximo 200 caracteres."
-});
+      return res.status(400).json({ msg :"As observações devem ter no máximo 200 caracteres."});
       
-  } else {
+    } else {
 
       await db.query(
 
@@ -852,21 +849,15 @@ router.post("/Pet_Veterinario", IdBodyChecagem , async (req, res) => {
 
       );
 
-      res.status(201).json({
+      res.status(201).json({ msg : "Atendimento veterinário cadastrado com sucesso!"});
 
-        msg : "Atendimento veterinário cadastrado com sucesso!"
-});
-
-  }
+    }
 
   } catch (error) {
 
-      res.status(400).json({
+    res.status(400).json({msg : "Não foi possível cadastrar o atendimento veterinário."});
 
-        msg : "Não foi possível cadastrar o atendimento veterinário."
-});
-
-}
+  }
 
 });
 
@@ -882,9 +873,9 @@ router.get("/Pet_Veterinario", async (req, res) => {
   
   } catch (error) {
   
-   res.status(400).json({msg : "Não foi possível buscar os atendimentos veterinários."});
+    res.status(400).json({msg : "Não foi possível buscar os atendimentos veterinários."});
   
-    }
+  }
 });
 
 
@@ -901,7 +892,7 @@ router.get("/Pet_Veterinario", async (req, res) => {
   
    res.status(400).json({msg : "Não foi possível buscar os atendimentos veterinários."});
   
-    }
+  }
 });
   
   
