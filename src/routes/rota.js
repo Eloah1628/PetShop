@@ -329,9 +329,10 @@ router.post("/produto", async (req, res) => {
       return res.status(400).json({msg: "Dados do produto inválidos."});
     }
 
-    const ProdutoCadastrado = await db.query("INSERT INTO Produtos (nome, descricao, preco, quant_estoque) VALUES($1, $2, $3, $4) RETURNING *", [nome, descricao, preco, quant_estoque]);
+    const ProdutoCadastrado = await db.query( "INSERT INTO Produtos (nome, descricao, preco, quant_estoque) VALUES($1, $2, $3, $4) RETURNING *", [nome, descricao, preco, quant_estoque]);
+
     res.status(201).json(ProdutoCadastrado.rows[0]);
-    } catch (error) {
+  } catch (error) {
     res.status(500).json({msg : "Erro ao cadastrar produto."});
   }
 });
@@ -362,20 +363,23 @@ router.put("/produto/:id", IdChecagem, async (req, res) => {
   const {nome, descricao, preco, quant_estoque} = req.body;
 
   try {
-  if (!nome || !descricao || preco <= 0 ||
-    !Number.isInteger(quant_estoque) || quant_estoque <= 0) {
+  if (!nome || !descricao ||typeof preco !== "number" ||
+    !Number.isFinite(preco) || preco <= 0 ||
+    !Number.isInteger(quant_estoque) || quant_estoque < 0) {
     return res.status(400).json({msg : "Dados do produto inválidos."});
   }
 
-  const ProdutoEditado = await db.query(
+    const ProdutoEditado = await db.query(
     "UPDATE Produtos SET nome = $1, descricao = $2, preco = $3, quant_estoque = $4 WHERE id = $5 RETURNING *", [nome, descricao, preco, quant_estoque, id]);
 
   if (ProdutoEditado.rows.length === 0) {
     return res.status(404).json({msg : "Produto não encontrado."});
   }
 
-  res.status(200).json(ProdutoEditado.rows[0]);
+    res.status(200).json(ProdutoEditado.rows[0]);
+
   } catch (error) {
+    console.error(error);
     res.status(500).json({msg : "Erro ao atualizar produto."});
   }
 });
