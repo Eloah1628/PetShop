@@ -3,12 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página inicial</title>
+    <title>PetShop Luzzie</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Bem vindo ao express_template_docker</h1>
-    <p>Teste a rota <a href="/hello">neste link</a></p>
-    <p>Bom desenvolvimento!</p>
 
+    <header>
+        <h1>🐾 PetShop Luzzie</h1>
+
+        <nav>
+            <a href="#inicio">Início</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#contato">Contato</a>
+            <a href="login.html">Entrar</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="banner" id="inicio">
+            <h2>O melhor cuidado para seu melhor amigo!</h2>
+            <p>Carinho, cuidado e qualidade para o seu pet.</p>
+            <button onclick="mostrarMensagem()">Conheça nosso PetShop</button>
+        </section>
+
+        <section class="servicos" id="servicos">
+            <h2>Nossos serviços</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>🐶 Cadastro de Pets</h3>
+                    <p>Cadastre e acompanhe seus animais.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🛍️ Produtos</h3>
+                    <p>Consulte nossos produtos.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🩺 Veterinários</h3>
+                    <p>Conheça nossos profissionais.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contato">
+        <p>© 2026 PetShop Luzzie - Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
 </body>
 </html>
