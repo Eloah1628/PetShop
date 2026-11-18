@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("./middlewares/upload");
+const upload = require("../middlewares/upload");
 const db = require("../db");
 
 const {IdChecagem, IdBodyChecagem} = require('../middlewares/Checagens.js');
@@ -20,6 +20,7 @@ router.get("/usuarios", async (req, res) => {
       res.status(200).json(ListaUsuarios.rows);
 
   } catch (error) {
+    
 
       res.status(500).json({msg : "Erro ao buscar usuários."});
 }
@@ -109,18 +110,18 @@ router.post("/usuario/:id/foto", IdChecagem, async (req, res) => {
     const { foto_url } = req.body;
 
     if (!foto_url || !LinkFotoValido(foto_url)) {
-        return res.status(400).json({ erro: "Link de foto inválido." });
+        return res.status(400).json({msg : "Link de foto inválido." });
     }
 
     const usuarioAtualizado = await db.query("UPDATE Usuarios SET foto_url = $1 WHERE id = $2 RETURNING id, nome, email, cpf foto_url", [foto_url, id]);
 
     if (usuarioAtualizado.rows.length === 0) {
-      return res.status(404).json({ erro: "Usuário não encontrado." });
+      return res.status(404).json({msg : "Usuário não encontrado." });
     }
 
     res.status(200).json(usuarioAtualizado.rows[0]);
   } catch (error) {
-    res.status(500).json({ erro: "Erro ao adicionar a foto." });
+    res.status(500).json({msg : "Erro ao adicionar a foto." });
   }
 });
 
@@ -190,19 +191,19 @@ router.post("/pet/:id/foto", IdChecagem, async (req, res) => {
     const {foto_url} = req.body;
 
     if (!foto_url || !LinkFotoValido(foto_url)) {
-      return res.status(400).json({ erro: "Link de foto inválido." });
+      return res.status(400).json({msg : "Link de foto inválido." });
     }
 
     const petAtualizado = await db.query("UPDATE Pets SET foto_url = $1 WHERE id = $2 RETURNING *", [foto_url, id]);
 
     if (petAtualizado.rows.length === 0) {
-      return res.status(404).json({ erro: "Pet não encontrado." });
+      return res.status(404).json({msg : "Pet não encontrado." });
     }
 
     res.status(200).json(petAtualizado.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ erro: "Erro ao adicionar a foto." });
+    res.status(500).json({msg : "Erro ao adicionar a foto." });
   }
 });
 
@@ -216,8 +217,13 @@ router.post("/pet", async (req, res) => {
     if (!Generos.includes(sexo)) {
       return res.status(400).json({msg : "Sexo inválido."});
   }
-    const novoPet = await db.query("INSERT INTO Pets(nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES($1, $2, $3, $4, $5, $6) RETURNING *", [nome, idade, sexo, descricao, historico_vet, estado_atual]);
-    res.status(201).json(novoPet.rows[0]);
+
+  if (idade !== null && idade !== undefined && (!Number.isInteger(idade) || idade < 0)) {
+    return res.status(400).json({msg : "Idade inválida."});
+  }
+
+  const novoPet = await db.query("INSERT INTO Pets(nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES($1, $2, $3, $4, $5, $6) RETURNING *", [nome, idade ?? null, sexo, descricao ?? null, historico_vet ?? null, estado_atual ?? null]);
+  res.status(201).json(novoPet.rows[0]);
 
   } catch (error) {
     return res.status(500).json({msg : "Erro ao cadastrar pet."})
@@ -230,6 +236,10 @@ router.put("/pet/:id", IdChecagem, async (req, res) => {
   try {
     if (!Generos.includes(sexo)) {
       return res.status(400).json({msg : "Sexo inválido."});
+    }
+
+    if (idade !== null && idade !== undefined && (!Number.isInteger(idade) || idade < 0)) {
+      return res.status(400).json({msg : "Idade inválida."});
     }
 
     const petAtualizado = await db.query("UPDATE Pets SET nome = $1, idade = $2, sexo = $3, descricao = $4, historico_vet = $5, estado_atual = $6 WHERE id = $7 RETURNING *", [nome, idade, sexo, descricao, historico_vet, estado_atual, id]);
@@ -311,19 +321,19 @@ router.post("/produto/:id/foto", IdChecagem, async (req, res) => {
     const { foto_url } = req.body;
 
     if (!foto_url || !LinkFotoValido(foto_url)) {
-      return res.status(400).json({ erro: "Link de foto inválido." });
+      return res.status(400).json({msg : "Link de foto inválido." });
     }
 
     const produtoAtualizado = await db.query("UPDATE Produtos SET foto_url = $1 WHERE id = $2 RETURNING *", [foto_url, id]);
 
     if (produtoAtualizado.rows.length === 0) {
-      return res.status(404).json({ erro: "Produto não encontrado." });
+      return res.status(404).json({msg : "Produto não encontrado." });
     }
 
     res.status(200).json(produtoAtualizado.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ erro: "Erro ao adicionar a foto." });
+    res.status(500).json({msg : "Erro ao adicionar a foto." });
   }
 });
 
