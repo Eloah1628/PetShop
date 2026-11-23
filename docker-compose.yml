@@ -6,6 +6,8 @@ services:
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
+    env_file:
+      - .env
     environment:
       - NODE_ENV=development
       - PORT=3000
@@ -36,7 +38,7 @@ services:
     ports:
       - "${PGWEB_PORT:-8081}:8081"
     environment:
-      - PGWEB_DATABASE_URL=postgres://usuario:senha@database:5432/bancodados?sslmode=disable
+      - PGWEB_DATABASE_URL=postgres://usuario:senha@database:5432/PetShopLuzzie?sslmode=disable
     depends_on:
       database:
         condition: service_healthy
