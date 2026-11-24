@@ -1,63 +1,55 @@
 ## PetShopLuzzie
 
+## Descrição
 
-
-
-## Descricao 
-
-Um site onde você pode marcar consultas veterinárias e comprar produtos ou acessórios para seu pet.
-Você também pode contemplar a experiência de adotar um novo companheiro ou registrar um pet que voce encontrou/nâo pode mais cuidar.
-
-
-
-
-## Objetivos o que se pretende alcançar.
-
-O objetivo do projeto é desenvolver um site que facilite os cuidados com os animais de estimação, reunindo em uma única plataforma serviços e recursos voltados ao bem-estar animal. 
-
-O projeto busca conectar tutores, veterinários e pessoas interessadas em ajudar os animais, incentivando a adoção responsável, a conscientização e o cuidado com os pets.
-
-
+Um site onde você pode marcar consultas veterinárias e comprar produtos ou acessórios para o seu pet.
+Você também pode contemplar a experiência de adotar um novo companheiro ou registrar um pet que encontrou ou que não pode mais cuidar.
 
 ## Objetivos
 
-O site permitirá que os usuários agendem consultas veterinárias, comprem produtos e acessórios para seus pets, além de possibilitar a adoção responsável de animais que precisam de um lar. Futuramente também será possível cadastrar animais encontrados na rua ou aqueles que seus tutores não podem mais cuidar, ajudando a encontrar novos lares e a promover o acolhimento. 
+O objetivo do projeto é desenvolver um site que facilite os cuidados com os animais de estimação, reunindo em uma única plataforma serviços e recursos voltados ao bem-estar animal.
 
+O projeto busca conectar tutores, veterinários e pessoas interessadas em ajudar os animais, incentivando a adoção responsável, a conscientização e o cuidado com os pets.
 
+O site permite que os usuários agendem consultas veterinárias, comprem produtos e acessórios para seus pets, além de possibilitar a adoção responsável de animais que precisam de um lar. Futuramente também será possível cadastrar animais encontrados na rua ou aqueles que seus tutores não podem mais cuidar, ajudando a encontrar novos lares e a promover o acolhimento.
 
-## Conteúdo ou funcionalidades o que o projeto apresenta.
+## Conteúdo e funcionalidades
 
-O sistema permite cadastrar usuários e seus pets, armazenando informações como nome, idade, sexo, descrição, histórico veterinário e estado atual de saúde. Também possibilita registrar produtos disponíveis para venda, incluindo preços, descrições e quantidades em estoque. Além disso, o banco de dados organiza informações sobre veterinários, suas datas de nascimento e especializações, permitindo relacionar os profissionais aos clientes e aos animais atendidos.
+- Cadastro e login de usuários (com autenticação via JWT e senha criptografada com bcrypt).
+- CRUD de usuários, pets, produtos e veterinários, com validação de IDs e de dados.
+- Registro de compras de produtos (quantidade e data) e de consultas veterinárias (com datas e observações).
+- Upload de fotos para usuários, pets e produtos.
+- Páginas públicas com a listagem de pets disponíveis para adoção e de produtos à venda.
 
-O sistema também registra compras de produtos, quantidades adquiridas, datas de compra e consultas veterinárias, incluindo as datas dos atendimentos e suas respectivas observações.
+## Tecnologias utilizadas
 
-Por meio dessas funcionalidades, o projeto busca facilitar a organização e o gerenciamento dos serviços oferecidos pelo PetShopLuzzie, servindo como base para uma plataforma  voltada aos cuidados, à saúde e ao bem-estar dos animais de estimação.
+- Node.js com Express (API REST)
+- PostgreSQL (banco de dados relacional)
+- Docker e Docker Compose (ambiente containerizado)
+- HTML, CSS e JavaScript (frontend)
+- JWT, bcrypt, multer, pg
 
+## Como executar
 
-
-## Tecnologias utilizadas linguagens, ferramentas ou plataformas, se houver.
-
-O projeto PetShopLuzzie apresenta um banco de dados desenvolvido em SQL para gerenciar informações relacionadas a usuários, animais de estimação, produtos e veterinários.
-
-
-
-## Como executar ou utilizar instruções para visualizar ou rodar o projeto.
-    Como acessar o banco de dados
-
-    Vá para o docker e digite no terminal:
+Certifique-se de ter o Docker e o Docker Compose instalados. No terminal, na pasta do projeto:
 
     ```
-        docker compose up --build -d
+    É necessário instalar o Node com "npm install node".
+    Para recriar o banco do zero (apaga os dados):
+    docker compose down -v
+    docker compose up --build -d
     ```
 
-    Após inicializado, o webservice pode ser acessado em http://localhost:3000/.
-    A interface gráfica de controle do banco de dados pode ser acessada em http://localhost:8081.
+## Após inicializado:
+    ```
+    - Site: http://localhost:3000/
+    - API: rotas como http://localhost:3000/pets, http://localhost:3000/produtos
+    - Interface gráfica do banco (pgweb): http://localhost:8081/
+    ```
 
-    
-
-    
 ## Participantes
-```
-Eloah Gabriele dos Santos
-Julia Cantuária Linhares
-```
+
+    ```
+    Eloah Gabriele dos Santos
+    Julia Cantuária Linhares
+    ```
