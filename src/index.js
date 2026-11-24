@@ -4,17 +4,15 @@ const path = require("path");
 
 const app = express();
 
-app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 
-app.use("/hello", require("./routes/rota"));
+app.use(express.static(path.join(__dirname, "static")));
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "..", "upload")));
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "static", "index.html"));
-});
+app.use(require("./routes/paginas"));
+app.use(require("./routes/rota"));
 
 const PORT = process.env.PORT || 3000;
 
