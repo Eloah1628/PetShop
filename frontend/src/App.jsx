@@ -18,6 +18,10 @@ export default function App() {
   return (
     <>
       <header>
+        <a className="navbar-brand" href="/">
+         <img src="https://images.openai.com/static-rsc-4/SoYiGBGnGx3lu4W9MriTqE1-C61o4ovV4q8--MwzsEPSHgvPLgEpMZGtp6Q0sdsn8hoLGDg_qeZZuroOq_840WjsSomBH8QsVXDLwiwhoGDBr5hBvxPkPLaWsEs1movaP7xVZ3NqDJcnUzlDbkYz-o_P9cIqGsuhTNAOHqUu7VhzxhJ7LMV0fOfa38oLEqnf?purpose=fullsize" alt="Logo PetShop Luzzie" />
+        </a>
+
         <Link to="/" className="logo">PetShop Luzzie</Link>
         <nav>
           <Link to="/">Início</Link>
@@ -40,33 +44,33 @@ export default function App() {
       </main>
 
       <footer>
-        <div class="container">
-              <div class="row">
-                  <div class="col-md-6">
-                      <h5>Resgate e Adoção</h5>
-                      <p>Encontre o companheiro perfeito e ajude pets a terem um lar cheio de amor.</p>
-                  </div>
-                  <div class="col-md-3">
-                      <h6>Contato</h6>
-                      <p>
-                          Telefone: (11) 4002-8922
-                          <br></br>
-                          E-mail: contato@amigopet.org.br
-                      </p>
-                  </div>
-                  <div class="col-md-3">
-                      <h6>Endereço</h6>
-                      <p>
-                          Rua dos Pets, 123 - Centro
-                          <br></br>
-                          São Paulo - SP
-                          <br></br>
-                          Seg. a sáb., das 9h às 18h
-                      </p>
-                  </div>
-              </div>
-          </div>
-        </footer>
+        <div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Resgate e Adoção</h5>
+                    <p>Encontre o companheiro perfeito e ajude pets a terem um lar cheio de amor.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Contato</h6>
+                    <p>
+                        Telefone: (11) 4002-8922
+                        <br></br>
+                        E-mail: contato@amigopet.org.br
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Endereço</h6>
+                    <p>
+                        Rua dos Pets, 123 - Centro
+                        <br></br>
+                        São Paulo - SP
+                        <br></br>
+                        Seg. a sáb., das 9h às 18h
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
     </>
   );
 }
