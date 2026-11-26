@@ -53,6 +53,8 @@ export default function Home() {
 
   return (
     <>
+
+      
       <section className="hero">
         <h1>Bem-vindo ao PetShop Luzzie</h1>
         <p>O cuidado que o seu melhor amigo merece, com amor e dedicação.</p>

@@ -72,6 +72,11 @@
   .hero {
     text-align: center;
     padding: 48px 0;
+    background-image: url('./assets/banner.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
   }
   
   .hero h1 {

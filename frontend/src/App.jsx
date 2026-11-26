@@ -40,8 +40,33 @@ export default function App() {
       </main>
 
       <footer>
-        <p>2026 PetShop Luzzie. Todos os direitos reservados.</p>
-      </footer>
+        <div class="container">
+              <div class="row">
+                  <div class="col-md-6">
+                      <h5>Resgate e Adoção</h5>
+                      <p>Encontre o companheiro perfeito e ajude pets a terem um lar cheio de amor.</p>
+                  </div>
+                  <div class="col-md-3">
+                      <h6>Contato</h6>
+                      <p>
+                          Telefone: (11) 4002-8922
+                          <br></br>
+                          E-mail: contato@amigopet.org.br
+                      </p>
+                  </div>
+                  <div class="col-md-3">
+                      <h6>Endereço</h6>
+                      <p>
+                          Rua dos Pets, 123 - Centro
+                          <br></br>
+                          São Paulo - SP
+                          <br></br>
+                          Seg. a sáb., das 9h às 18h
+                      </p>
+                  </div>
+              </div>
+          </div>
+        </footer>
     </>
   );
 }
