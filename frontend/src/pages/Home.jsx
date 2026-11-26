@@ -53,17 +53,9 @@ export default function Home() {
 
   return (
     <>
-
-      
       <section className="hero">
-        <h1>Bem-vindo ao PetShop Luzzie</h1>
-        <p>O cuidado que o seu melhor amigo merece, com amor e dedicação.</p>
-        {!autenticado && (
-          <div className="buttons">
-            <Link to="/login" className="btn">Entrar</Link>
-            <Link to="/cadastro" className="btn btn-outline">Cadastre-se</Link>
-          </div>
-        )}
+        <h1><strong>Bem-vindo ao PetShop Luzzie</strong></h1>
+        <h2><b>O cuidado que o seu melhor amigo merece, com amor e dedicação.</b></h2>
       </section>
 
       {mensagem && <div className="success-msg">{mensagem}</div>}
