@@ -76,21 +76,21 @@ CREATE TABLE Pet_Veterinario (
 );
 
 /* Senha de TODOS os usuários de exemplo: senha123 (hash bcrypt) */
-INSERT INTO Usuarios (nome, email, senha, cpf, is_admin) VALUES
+INSERT INTO Usuarios (nome, email, senha, cpf, foto_url, is_admin) VALUES
 ('Ana Silva', 'AnaSilva1230@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '123.456.789-01', FALSE),
-('Bruno Santos', 'BrunoSants@hotmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '234.567.890-12', FALSE),
-('Carla Oliveira', 'CarlaOliva@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '345.678.901-23', FALSE),
+('Bruno Santos', 'BrunoSants@hotmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '234.567.890-12', , FALSE),
+('Carla Oliveira', 'CarlaOliva@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '345.678.901-23', , FALSE),
 ('Admin Luzzie', 'admin@petshop.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '000.000.000-00', TRUE);
 
-INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual) VALUES
-('Rex', 5, 'M', 'Cachorro da raca Labrador', 'Vacinado e castrado', 'Saudavel'),
-('Luna', 3, 'F', 'Gata da raca Siames', 'Tratamento contra pulgas', 'Saudavel'),
-('Bob', 7, 'M', 'Cachorro da raca Poodle', 'Acompanhamento odontologico', 'Em observacao');
+INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual, foto_url) VALUES
+('Rex', 5, 'M', 'Cachorro da raca Labrador', 'Vacinado e castrado', 'Saudavel', 'https://static.nationalgeographicbrasil.com/files/styles/image_3200/public/nationalgeographic_2791280_bx.webp?w=1600&h=1714&p=right'),
+('Luna', 3, 'F', 'Gata da raca Siames', 'Tratamento contra pulgas', 'Saudavel', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp6Dlhz27kenqFUCuoc4tkwCv4ZUIvhPm5ZCbEcrmvcPZ6GYYkxNeMVHjc&s=10'),
+('Bob', 7, 'M', 'Cachorro da raca Poodle', 'Acompanhamento odontologico', 'Em observacao', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnhSCg_kaY4syLV4O17ei3jHuba5VwexGjCI8ClTIQTBYl3ivBE7bTrJmY&s=10');
 
-INSERT INTO Produtos (nome, preco, descricao, quant_estoque) VALUES
-('Racao para caes', 89.90, 'Racao premium para caes adultos', 30),
-('Racao para gatos', 74.50, 'Racao para gatos adultos', 25),
-('Coleira azul', 19.90, 'Coleira ajustavel para caes', 40);
+INSERT INTO Produtos (nome, preco, descricao, quant_estoque, foto_url) VALUES
+('Racao para caes', 89.90, 'Racao premium para caes adultos', 30, 'https://www.ecompletocdn.com.br/i/fp/1607/1129229_1_1588739591.jpg'),
+('Racao para gatos', 74.50, 'Racao para gatos adultos', 25, 'https://lojatudodebicho.fbitsstatic.net/img/p/racao-golden-special-para-gatos-adultos-frango-e-carne-10kg-166790/357376-1.jpg?w=824&h=824&v=202610271452'),
+('Coleira azul', 19.90, 'Coleira ajustavel para caes', 40, 'https://m.media-amazon.com/images/I/711hUHP-A2L._AC_UF1000,1000_QL80_.jpg');
 
 INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES
 ('Dr. Pedro Almeida', '1985-04-12', 'Clinica geral'),
