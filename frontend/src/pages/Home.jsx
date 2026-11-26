@@ -86,23 +86,46 @@ export default function Home() {
 
       <section>
         <h2>Produtos</h2>
+
         {produtos.length === 0 && <p>Nenhum produto cadastrado ainda.</p>}
+
         <div className="grid">
           {produtos.map((produto) => (
             <div className="card" key={produto.id}>
-              {fotoSrc(produto.foto_url) && (
-                <img src={fotoSrc(produto.foto_url)} alt={produto.nome} />
+
+              {produto.foto_url && (
+                <img
+                  src={fotoSrc(produto.foto_url)}
+                  alt={produto.nome}
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
+                />
               )}
+
               <h3>{produto.nome}</h3>
+
               <p>{produto.descricao}</p>
-              <p className="preco">R$ {Number(produto.preco).toFixed(2)}</p>
+
+              <p className="preco">
+                R$ {Number(produto.preco).toFixed(2).replace(".", ",")}
+              </p>
+
               <p>Estoque: {produto.quant_estoque}</p>
+
               {autenticado && !usuario.is_admin && (
-                <button className="btn btn-small" onClick={() => comprar(produto.id)}>
+                <button
+                  className="btn btn-small"
+                  onClick={() => comprar(produto.id)}
+                >
                   Comprar
                 </button>
               )}
-              {!autenticado && <p className="aviso">Faça login para comprar.</p>}
+
+              {!autenticado && (
+                <p className="aviso">Faça login para comprar.</p>
+              )}
+
             </div>
           ))}
         </div>
