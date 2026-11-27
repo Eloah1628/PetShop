@@ -450,19 +450,32 @@ router.put("/produto/:id", requireAuth, requireAdmin, IdChecagem, async (req, re
 });
 
 // Admin
-router.delete("/produto/:id", requireAuth, requireAdmin, IdChecagem, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const ProdutoRemovido = await db.query("DELETE FROM Produtos WHERE id = $1 RETURNING *", [id]);
+router.put("/produto/:id", requireAuth, requireAdmin, IdChecagem, async (req, res) => {
+    const { id } = req.params;
+    const { nome, descricao, preco, quant_estoque } = req.body;
 
-        if (ProdutoRemovido.rows.length === 0) {
+    try {
+        const precoNum = Number(preco);
+        const estoqueNum = Number(quant_estoque);
+
+        if (!nome || !descricao || !Number.isFinite(precoNum) || precoNum <= 0 ||
+            !Number.isInteger(estoqueNum) || estoqueNum < 0) {
+            return res.status(400).json({ msg: "Dados do produto inválidos." });
+        }
+
+        const ProdutoEditado = await db.query(
+            "UPDATE Produtos SET nome = $1, descricao = $2, preco = $3, quant_estoque = $4 WHERE id = $5 RETURNING *",
+            [nome, descricao, precoNum, estoqueNum, id]
+        );
+
+        if (ProdutoEditado.rows.length === 0) {
             return res.status(404).json({ msg: "Produto não encontrado." });
         }
 
-        res.status(200).json({ msg: "Produto removido com sucesso!", produto: ProdutoRemovido.rows[0] });
+        res.status(200).json(ProdutoEditado.rows[0]);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ msg: "Erro ao remover produto." });
+        res.status(500).json({ msg: "Erro ao atualizar produto." });
     }
 });
 
@@ -641,59 +654,54 @@ router.post("/Cliente_Produto", requireAuth, async (req, res) => {
             return res.status(400).json({ msg: "Dados da compra inválidos." });
         }
 
-        await db.query(
-            "INSERT INTO Cliente_Produto(id_usuario, id_produto, quantidade, data_compra) VALUES($1, $2, $3, $4)",
-            [req.userId, id_produto, quantidade, data_compra]
+        const compra = await db.query("INSERT INTO Cliente_Produto (id_usuario, id_produto, quantidade, data_compra) VALUES($1, $2, $3, $4) RETURNING *", [req.userId, id_produto, quantidade, data_compra]
         );
 
-        res.status(201).json({ msg: "Compra registrada com sucesso!" });
+        res.status(201).json({msg: "Compra registrada com sucesso!", compra: compra.rows[0]});
+
     } catch (error) {
         console.error(error);
-
-        if (error.code === "23505") {
-            return res.status(409).json({ msg: "Compra já registrada nesta data." });
-        }
-
-        res.status(400).json({ msg: "Não foi possível registrar a compra." });
+        res.status(400).json({msg: "Não foi possível registrar a compra."});
     }
 });
 
-// Logado: minhas compras (com dados do produto)
+// Logado: minhas compras
 router.get("/Cliente_Produto", requireAuth, async (req, res) => {
     try {
-        const resultado = await db.query(
-            `SELECT cp.id_usuario, cp.id_produto, cp.quantidade, cp.data_compra,
-                    pr.nome, pr.preco, pr.foto_url
-             FROM Cliente_Produto cp JOIN Produtos pr ON pr.id = cp.id_produto
-             WHERE cp.id_usuario = $1`,
-            [req.userId]
-        );
+        const resultado = await db.query("SELECT cp.id_compra, cp.id_usuario, cp.id_produto, cp.quantidade, cp.data_compra, pr.nome, pr.preco, pr.foto_url FROM Cliente_Produto cp JOIN Produtos pr ON pr.id = cp.id_produto WHERE cp.id_usuario = $1 ORDER BY cp.data_compra DESC", [req.userId]);
 
         res.status(200).json(resultado.rows);
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ msg: "Não foi possível buscar as suas compras." });
+        res.status(500).json({
+            msg: "Não foi possível buscar as suas compras."
+        });
     }
 });
 
 // Logado: cancelar compra
-router.delete("/Cliente_Produto/:id_produto/:data_compra", requireAuth, async (req, res) => {
-    const { id_produto, data_compra } = req.params;
+router.delete("/Cliente_Produto/:id_compra", requireAuth, async (req, res) => {
+    const { id_compra } = req.params;
 
     try {
-        const removido = await db.query(
-            "DELETE FROM Cliente_Produto WHERE id_usuario = $1 AND id_produto = $2 AND data_compra = $3 RETURNING *",
-            [req.userId, id_produto, data_compra]
-        );
+        const removido = await db.query("DELETE FROM Cliente_Produto WHERE id_usuario = $1 AND id_compra = $2 RETURNING *", [req.userId, id_compra]);
 
         if (removido.rows.length === 0) {
-            return res.status(404).json({ msg: "Compra não encontrada." });
+            return res.status(404).json({
+                msg: "Compra não encontrada."
+            });
         }
 
-        res.status(200).json({ msg: "Compra removida com sucesso!" });
+        res.status(200).json({
+            msg: "Compra removida com sucesso!"
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ msg: "Não foi possível remover a compra." });
+        res.status(500).json({
+            msg: "Não foi possível remover a compra."
+        });
     }
 });
 

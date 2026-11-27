@@ -75,6 +75,18 @@ CREATE TABLE Pet_Veterinario (
     FOREIGN KEY (id_veterinario) REFERENCES Veterinarios(id) ON DELETE CASCADE
 );
 
+ALTER TABLE Pets ADD COLUMN disponibilidade VARCHAR(20) DEFAULT 'Disponível';
+
+ALTER TABLE Cliente_Produto DROP CONSTRAINT cliente_produto_pkey;
+ALTER TABLE Cliente_Produto ADD COLUMN id_compra SERIAL;
+ALTER TABLE Cliente_Produto ADD PRIMARY KEY (id_compra);
+
+ALTER TABLE Pets ADD COLUMN IF NOT EXISTS disponibilidade VARCHAR(20) DEFAULT 'Disponível';
+
+ALTER TABLE Cliente_Produto DROP CONSTRAINT IF EXISTS cliente_produto_pkey;
+ALTER TABLE Cliente_Produto ADD COLUMN IF NOT EXISTS id_compra SERIAL;
+ALTER TABLE Cliente_Produto ADD PRIMARY KEY (id_compra);
+
 /* Senha de TODOS os usuários de exemplo: senha123 (hash bcrypt) */
 INSERT INTO Usuarios (nome, email, senha, cpf, foto_url, is_admin) VALUES
 ('Ana Silva', 'AnaSilva1230@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '123.456.789-01', '', FALSE),
