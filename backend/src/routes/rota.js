@@ -148,6 +148,31 @@ router.post("/usuario/:id/foto", requireAuth, IdChecagem, upload.single("foto"),
     }
 });
 
+// Admin ou o próprio usuário: ver pets de um usuário específico
+router.get("/usuario/:id/pets", requireAuth, async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (Number(id) !== req.userId) {
+            const eu = await db.query("SELECT is_admin FROM Usuarios WHERE id = $1", [req.userId]);
+            if (eu.rows.length === 0 || !eu.rows[0].is_admin) {
+                return res.status(403).json({ msg: "Acesso negado." });
+            }
+        }
+
+        const resultado = await db.query(
+            `SELECT cp.id_usuario, cp.id_pet, p.nome, p.idade, p.sexo, p.descricao, p.foto_url
+             FROM Cliente_Pet cp JOIN Pets p ON p.id = cp.id_pet
+             WHERE cp.id_usuario = $1`,
+            [id]
+        );
+
+        res.status(200).json(resultado.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Erro ao buscar pets do usuário." });
+    }
+});
+
 // Logado: atualizar próprio cadastro (ou admin)
 router.put("/usuario/:id", requireAuth, IdChecagem, async (req, res) => {
     const { id } = req.params;
@@ -598,7 +623,7 @@ router.post("/Cliente_Pet", requireAuth, async (req, res) => {
         console.error(error);
 
         if (error.code === "23505") {
-            return res.status(409).json({ msg: "Você já adotou este pet." });
+            return res.status(409).json({ msg: "Você já solicitou este pet." });
         }
 
         res.status(400).json({ msg: "Não foi possível adotar o pet." });
