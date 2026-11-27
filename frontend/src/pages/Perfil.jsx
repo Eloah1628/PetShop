@@ -16,11 +16,20 @@ export default function Perfil() {
   const [mensagem, setMensagem] = useState("");
   const [erro, setErro] = useState("");
 
-  // Função para formatar a data ISO para o padrão brasileiro (DD/MM/AAAA)
   const formatarData = (dataISO) => {
     if (!dataISO) return "";
     const data = new Date(dataISO);
     return data.toLocaleDateString("pt-BR", {
+      timeZone: "UTC",
+    });
+  };
+
+  const formatarHorario = (dataISO) => {
+    if (!dataISO) return "";
+    const data = new Date(dataISO);
+    return data.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
       timeZone: "UTC",
     });
   };
@@ -103,19 +112,19 @@ export default function Perfil() {
     e.preventDefault();
     setMensagem("");
     setErro("");
-
+  
     if (!idVet || !dataConsulta || !horarioConsulta) {
       setErro("Escolha o veterinário, a data e o horário da consulta.");
       return;
     }
 
+    const dataHoraCompleta = `${dataConsulta}T${horarioConsulta}:00`;
     try {
       const dados = await api("/Cliente_Veterinario", {
         method: "POST",
         body: { 
           id_veterinario: Number(idVet), 
-          data_consulta: dataConsulta,
-          horario_consulta: horarioConsulta // Ajuste conforme o nome esperado pela sua API
+          data_consulta: dataHoraCompleta 
         },
       });
       setMensagem(dados.msg);
@@ -196,13 +205,13 @@ export default function Perfil() {
 
         <div className="grid">
           {compras.map((c) => (
-            <div className="card" key={c.id_compra}>
+            <div className="card" key={`${c.id_compra}-${c.data_compra}`}>
               <h3>{c.nome}</h3>
               <p>Quantidade: {c.quantidade}</p>
               <p className="preco">
                 R$ {Number(c.preco).toFixed(2)}
               </p>
-              <p>Data: {c.data_compra}</p>
+              <p>Data: {formatarData(c.data_compra)}</p>
             </div>
           ))}
         </div>
@@ -257,8 +266,9 @@ export default function Perfil() {
               <p>{c.especializacao}</p>
               <p>Data: {formatarData(c.data_consulta)}</p>
               {c.horario_consulta && (
-                <p>Horário: {c.horario_consulta.slice(0, 5)}</p>
+                <p>Horário: {c.horario_consulta ? c.horario_consulta.slice(0, 5) : formatarHorario(c.data_consulta)}</p>
               )}
+              
               <button
                 className="btn btn-small btn-outline"
                 onClick={() => cancelarConsulta(c.id_veterinario, c.data_consulta)}
