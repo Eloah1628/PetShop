@@ -100,9 +100,23 @@ INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual, fot
 ('Bob', 7, 'M', 'Cachorro da raca Poodle', 'Acompanhamento odontologico', 'Em observacao', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnhSCg_kaY4syLV4O17ei3jHuba5VwexGjCI8ClTIQTBYl3ivBE7bTrJmY&s=10');
 
 INSERT INTO Produtos (nome, preco, descricao, quant_estoque, foto_url) VALUES
-('Racao para caes', 89.90, 'Racao premium para caes adultos', 30, 'https://www.ecompletocdn.com.br/i/fp/1607/1129229_1_1588739591.jpg'),
-('Racao para gatos', 74.50, 'Racao para gatos adultos', 25, 'https://lojatudodebicho.fbitsstatic.net/img/p/racao-golden-special-para-gatos-adultos-frango-e-carne-10kg-166790/357376-1.jpg?w=824&h=824&v=202610271452'),
-('Coleira azul', 19.90, 'Coleira ajustavel para caes', 40, 'https://m.media-amazon.com/images/I/711hUHP-A2L._AC_UF1000,1000_QL80_.jpg');
+('Ração para cães', 89.90, 'Ração premium para cães adultos', 30, 'https://www.ecompletocdn.com.br/i/fp/1607/1129229_1_1588739591.jpg'),
+('Ração para gatos', 74.50, 'Ração para gatos adultos', 25, 'https://lojatudodebicho.fbitsstatic.net/img/p/racao-golden-special-para-gatos-adultos-frango-e-carne-10kg-166790/357376-1.jpg?w=824&h=824&v=202610271452'),
+('Coleira de corpo', 19.90, 'Coleira ajustavel para caes', 40, 'https://m.media-amazon.com/images/I/711hUHP-A2L._AC_UF1000,1000_QL80_.jpg'),
+('Cama para gatos', 69.90, 'Caminha confortável para gatos', 15, 'https://images.unsplash.com/photo-1573865526739-10659fec78a5'),
+('Comedouro de inox', 29.90, 'Comedouro de aço inoxidável para cães e gatos', 25, 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119'),
+('Bebedouro portátil', 34.90, 'Garrafa com bebedouro para passeios com animais', 18, 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b'),
+('Guia para cães', 27.90, 'Guia resistente para passeios com cães', 30, 'https://images.unsplash.com/photo-1551717743-49959800b1f6'),
+('Ração para filhotes', 99.90, 'Ração premium para cães filhotes', 20, 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119'),
+('Ração para cães idosos', 112.50, 'Ração especial para cães adultos e idosos', 15, 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119'),
+('Ração para gatos filhotes', 82.90, 'Ração nutritiva para gatos filhotes', 18, 'https://images.unsplash.com/photo-1573865526739-10659fec78a5'),
+('Sachê para gatos', 4.50, 'Alimento úmido sabor frango para gatos', 60, 'https://images.unsplash.com/photo-1545249390-6bdfa286032f'),
+('Petisco para cães', 15.90, 'Petisco crocante para cães de todos os portes', 35, 'https://images.unsplash.com/photo-1582798358481-d199fb7347bb'),
+('Petisco para gatos', 12.90, 'Petisco sabor salmão para gatos', 30, 'https://images.unsplash.com/photo-1573865526739-10659fec78a5'),
+('Areia para gatos', 24.90, 'Areia higiênica para gatos com controle de odores', 40, 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1'),
+('Shampoo para cães', 22.90, 'Shampoo neutro para higiene e cuidados dos pelos', 25, 'https://images.unsplash.com/photo-1582798358481-d199fb7347bb'),
+('Condicionador pet', 19.90, 'Condicionador para pelos macios e desembaraçados', 20, 'https://images.unsplash.com/photo-1582798358481-d199fb7347bb');
+
 
 INSERT INTO Veterinarios (nome, data_nasc, especializacao) VALUES
 ('Dr. Pedro Almeida', '1985-04-12', 'Clinica geral'),
