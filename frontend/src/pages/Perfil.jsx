@@ -12,31 +12,69 @@ export default function Perfil() {
   const [veterinarios, setVeterinarios] = useState([]);
   const [idVet, setIdVet] = useState("");
   const [dataConsulta, setDataConsulta] = useState("");
+  const [horarioConsulta, setHorarioConsulta] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [erro, setErro] = useState("");
 
+  // Função para formatar a data ISO para o padrão brasileiro (DD/MM/AAAA)
+  const formatarData = (dataISO) => {
+    if (!dataISO) return "";
+    const data = new Date(dataISO);
+    return data.toLocaleDateString("pt-BR", {
+      timeZone: "UTC",
+    });
+  };
+
   async function carregarTudo() {
-    try {
-      const [dadosPerfil, meusPets, minhasCompras, minhasConsultas, listaVets] = await Promise.all([
+    setErro("");
+
+    const resultados = await Promise.allSettled([
         api("/usuario/" + usuario.id),
         api("/Cliente_Pet"),
         api("/Cliente_Produto"),
         api("/Cliente_Veterinario"),
         api("/veterinarios"),
-      ]);
-      setPerfil(dadosPerfil);
-      setPets(meusPets);
-      setCompras(minhasCompras);
-      setConsultas(minhasConsultas);
-      setVeterinarios(listaVets);
-    } catch (e) {
-      setErro(e.message);
+    ]);
+
+    const [dadosPerfil, meusPets, minhasCompras, minhasConsultas, listaVets] = resultados;
+
+    const erros = [];
+
+    if (dadosPerfil.status === "fulfilled") {
+        setPerfil(dadosPerfil.value);
+    } else {
+        erros.push("Não foi possível buscar os dados do usuário.");
     }
+
+    if (meusPets.status === "fulfilled") {
+        setPets(meusPets.value);
+    } else {
+        erros.push("Não foi possível buscar seus pets.");
+    }
+
+    if (minhasCompras.status === "fulfilled") {
+        setCompras(minhasCompras.value);
+    } else {
+        erros.push("Não foi possível buscar suas compras.");
+    }
+
+    if (minhasConsultas.status === "fulfilled") {
+        setConsultas(minhasConsultas.value);
+    } else {
+        erros.push("Não foi possível buscar suas consultas.");
+    }
+
+    if (listaVets.status === "fulfilled") {
+        setVeterinarios(listaVets.value);
+    } else {
+        erros.push("Não foi possível buscar os veterinários.");
+    }
+
+    setErro(erros.join(" "));
   }
 
   useEffect(() => {
     if (autenticado) carregarTudo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autenticado]);
 
   async function enviarFoto(e) {
@@ -66,19 +104,24 @@ export default function Perfil() {
     setMensagem("");
     setErro("");
 
-    if (!idVet || !dataConsulta) {
-      setErro("Escolha o veterinário e a data da consulta.");
+    if (!idVet || !dataConsulta || !horarioConsulta) {
+      setErro("Escolha o veterinário, a data e o horário da consulta.");
       return;
     }
 
     try {
       const dados = await api("/Cliente_Veterinario", {
         method: "POST",
-        body: { id_veterinario: Number(idVet), data_consulta: dataConsulta },
+        body: { 
+          id_veterinario: Number(idVet), 
+          data_consulta: dataConsulta,
+          horario_consulta: horarioConsulta // Ajuste conforme o nome esperado pela sua API
+        },
       });
       setMensagem(dados.msg);
       setIdVet("");
       setDataConsulta("");
+      setHorarioConsulta("");
       carregarTudo();
     } catch (e2) {
       setErro(e2.message);
@@ -132,7 +175,7 @@ export default function Perfil() {
           </form>
         </div>
       </section>
-
+      
       <section>
         <h2>Meus pets</h2>
         {pets.length === 0 && <p>Você ainda não adotou nenhum pet.</p>}
@@ -149,13 +192,16 @@ export default function Perfil() {
 
       <section>
         <h2>Minhas compras</h2>
-        {compras.length === 0 && <p>Você ainda não comprou nenhum produto.</p>}
+        {compras.length === 0 && (<p>Você ainda não comprou nenhum produto.</p>)}
+
         <div className="grid">
           {compras.map((c) => (
-            <div className="card" key={c.id_produto + "-" + c.data_compra}>
+            <div className="card" key={c.id_compra}>
               <h3>{c.nome}</h3>
               <p>Quantidade: {c.quantidade}</p>
-              <p className="preco">R$ {Number(c.preco).toFixed(2)}</p>
+              <p className="preco">
+                R$ {Number(c.preco).toFixed(2)}
+              </p>
               <p>Data: {c.data_compra}</p>
             </div>
           ))}
@@ -176,26 +222,43 @@ export default function Perfil() {
               ))}
             </select>
           </div>
+          
           <div className="input-group">
-            <label htmlFor="dataConsulta">Data da consulta</label>
+            <label>Data da consulta</label>
             <input
               type="date"
-              id="dataConsulta"
+              min={new Date().toLocaleDateString("en-CA")}
               value={dataConsulta}
               onChange={(e) => setDataConsulta(e.target.value)}
+              required
             />
           </div>
+
+          <div className="input-group">
+            <label>Horário da consulta</label>
+            <input 
+              type="time" 
+              value={horarioConsulta} 
+              onChange={(e) => setHorarioConsulta(e.target.value)} 
+              required
+            />
+          </div>
+
           <button type="submit" className="btn btn-small">Agendar</button>
         </form>
 
         <h2>Minhas consultas</h2>
         {consultas.length === 0 && <p>Você não possui consultas agendadas.</p>}
+        
         <div className="grid">
           {consultas.map((c) => (
-            <div className="card" key={c.id_veterinario + "-" + c.data_consulta}>
+            <div className="card" key={`${c.id_veterinario}-${c.data_consulta}`}>
               <h3>{c.nome}</h3>
               <p>{c.especializacao}</p>
-              <p>Data: {c.data_consulta}</p>
+              <p>Data: {formatarData(c.data_consulta)}</p>
+              {c.horario_consulta && (
+                <p>Horário: {c.horario_consulta.slice(0, 5)}</p>
+              )}
               <button
                 className="btn btn-small btn-outline"
                 onClick={() => cancelarConsulta(c.id_veterinario, c.data_consulta)}
