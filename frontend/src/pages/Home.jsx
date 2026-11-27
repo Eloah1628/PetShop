@@ -25,7 +25,7 @@ export default function Home() {
     }
     carregar();
   }, []);
-
+  
   async function adotar(idPet) {
     setMensagem("");
     setErro("");
@@ -36,7 +36,7 @@ export default function Home() {
       setErro(e.message);
     }
   }
-
+  
   async function comprar(idProduto) {
     setMensagem("");
     setErro("");
@@ -75,7 +75,7 @@ export default function Home() {
               <p>Estado atual: {pet.estado_atual || "não informado"}</p>
               {autenticado && !usuario.is_admin && (
                 <button className="btn btn-small" onClick={() => adotar(pet.id)}>
-                  Adotar
+                  Ver perfil
                 </button>
               )}
               {!autenticado && <p className="aviso">Faça login para adotar.</p>}

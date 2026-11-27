@@ -77,10 +77,10 @@ CREATE TABLE Pet_Veterinario (
 
 /* Senha de TODOS os usuários de exemplo: senha123 (hash bcrypt) */
 INSERT INTO Usuarios (nome, email, senha, cpf, foto_url, is_admin) VALUES
-('Ana Silva', 'AnaSilva1230@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '123.456.789-01', FALSE),
-('Bruno Santos', 'BrunoSants@hotmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '234.567.890-12', , FALSE),
-('Carla Oliveira', 'CarlaOliva@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '345.678.901-23', , FALSE),
-('Admin Luzzie', 'admin@petshop.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '000.000.000-00', TRUE);
+('Ana Silva', 'AnaSilva1230@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '123.456.789-01', '', FALSE),
+('Bruno Santos', 'BrunoSants@hotmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '234.567.890-12', '', FALSE),
+('Carla Oliveira', 'CarlaOliva@gmail.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '345.678.901-23', '', FALSE),
+('Admin Luzzie', 'admin@petshop.com', '$2b$10$8E6tjOHFCfbHbtRQNAPGT.pH2WARft.aRNwun2BXDQsuPq.mvDvN2', '000.000.000-00', '', TRUE);
 
 INSERT INTO Pets (nome, idade, sexo, descricao, historico_vet, estado_atual, foto_url) VALUES
 ('Rex', 5, 'M', 'Cachorro da raca Labrador', 'Vacinado e castrado', 'Saudavel', 'https://static.nationalgeographicbrasil.com/files/styles/image_3200/public/nationalgeographic_2791280_bx.webp?w=1600&h=1714&p=right'),
